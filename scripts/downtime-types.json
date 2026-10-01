@@ -1,0 +1,112 @@
+[
+ {
+  "Category": "Operator Errors",
+  "Type": "Delay",
+  "Sort": 1
+ },
+ {
+  "Category": "Change Over",
+  "Type": "Delay",
+  "Sort": 2
+ },
+ {
+  "Category": "Product Delay",
+  "Type": "Delay",
+  "Sort": 3
+ },
+ {
+  "Category": "Low Air Pressure",
+  "Type": "Delay",
+  "Sort": 4
+ },
+ {
+  "Category": "Low CO2 Pressure",
+  "Type": "Delay",
+  "Sort": 5
+ },
+ {
+  "Category": "Low Water Pressure",
+  "Type": "Delay",
+  "Sort": 6
+ },
+ {
+  "Category": "Low Steam Pressure",
+  "Type": "Delay",
+  "Sort": 7
+ },
+ {
+  "Category": "Uncaser",
+  "Type": "Machine",
+  "Sort": 8
+ },
+ {
+  "Category": "Washer",
+  "Type": "Machine",
+  "Sort": 9
+ },
+ {
+  "Category": "EBI",
+  "Type": "Machine",
+  "Sort": 10
+ },
+ {
+  "Category": "Filler",
+  "Type": "Machine",
+  "Sort": 11
+ },
+ {
+  "Category": "Pasteuriser",
+  "Type": "Machine",
+  "Sort": 12
+ },
+ {
+  "Category": "Labeller",
+  "Type": "Machine",
+  "Sort": 13
+ },
+ {
+  "Category": "Videojet (Coder)",
+  "Type": "Machine",
+  "Sort": 14
+ },
+ {
+  "Category": "Conveyors",
+  "Type": "Machine",
+  "Sort": 15
+ },
+ {
+  "Category": "Packer",
+  "Type": "Machine",
+  "Sort": 16
+ },
+ {
+  "Category": "Carton Errector",
+  "Type": "Machine",
+  "Sort": 17
+ },
+ {
+  "Category": "Crate Rinser",
+  "Type": "Machine",
+  "Sort": 18
+ },
+ {
+  "Category": "Other Explained",
+  "Type": "Delay",
+  "Sort": 19
+ },
+ {
+  "Category": "Other Unexplained",
+  "Type": "Delay",
+  "Sort": 20
+ },
+ {
+  "Category": "Bottle Supply",
+  "Type": "Delay",
+  "Sort": 21
+ },
+ {
+  "Category": "Space Availability",
+  "Type": "Delay",
+  "Sort": 22
+ }
+]

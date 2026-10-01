@@ -117,10 +117,13 @@ function sourcesFor(p){
     if(!files.length)out.push({file:t,none:true});
     for(const f of files)if(!out.some(o=>o.file===f.file))out.push({file:f.file,time:f.time});
   }
-  // one badge for the monthly Utilities Tracking workbooks
-  const ut=out.filter(o=>/utilities_tracking/i.test(o.file));
-  if(ut.length>1){const keep=out.filter(o=>!ut.includes(o));keep.push({file:`Utilities Tracking (${ut.length} months)`,time:Math.max(...ut.map(o=>o.time))});return keep}
-  return out;
+  // one badge for each family of monthly workbooks
+  let res=out;
+  for(const [re,name] of [[/utilities[ _]tracking/i,'Utilities Tracking'],[/daily[ _]+process[ _]+report/i,'Daily Process Reports']]){
+    const g=res.filter(o=>re.test(o.file));
+    if(g.length>1)res=[...res.filter(o=>!g.includes(o)),{file:`${name} (${g.length} months)`,time:Math.max(...g.map(o=>o.time))}];
+  }
+  return res;
 }
 function renderHero(){
   const p=CUR,secName=SECTIONS.find(s=>s.id===p.sec).name;
@@ -141,7 +144,7 @@ function visualHTML(v,i){
   if(v.t==='row')return `<div class="s12 trow">${v.items.map(x=>visualHTML({...x,span:'x'})).join('')}</div>`;
   if(v.t==='card'){
     const na=v.v==null||(typeof v.v==='number'&&!isFinite(v.v));
-    const val=na?`<div class="tv na">${esc(v.na||'No data')}</div>`:typeof v.v==='string'?`<div class="tv txt">${esc(v.v)}</div>`:(t=>`<div class="tv${t.length>=11?' xs':t.length>=8?' s':''}">${esc(t)}${v.unit?`<small>${esc(v.unit)}</small>`:''}</div>`)((v.fmt||F.n0)(v.v));
+    const val=na?`<div class="tv na">${esc(v.na||'No data')}</div>`:typeof v.v==='string'?`<div class="tv txt">${esc(v.v)}</div>`:(t=>`<div class="tv${t.length>=10?' xs':t.length>=7?' s':''}">${esc(t)}${v.unit?`<small>${esc(v.unit)}</small>`:''}</div>`)((v.fmt||F.n0)(v.v));
     return `<div class="tile ${v.st||''} ${span}"><div class="tl">${esc(v.label)}</div>${v.foot?`<div class="tf">${esc(v.foot)}</div>`:''}${val}${v.sub?`<div class="ts ${v.subSt||''}">${esc(v.sub)}</div>`:''}</div>`;
   }
   const head=`<h2>${esc(v.title)}</h2>${v.hint?`<p class="hint">${esc(v.hint)}</p>`:'<p class="hint"></p>'}`;

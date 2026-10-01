@@ -29,7 +29,7 @@ page({sec:'kpi',id:'scorecard',title:'Supply chain KPI scorecard',tab:'Scorecard
     return [
       row([card('KPIs on target',on,{st:'good',foot:`Out of ${n} with a budget`,sub:n?`${fmtN(on/n*100,0)}% on target`:''}),card('KPIs off target',off,{st:off?'bad':'good',foot:'Actual worse than budget'}),
         ...Object.entries(deptStat).filter(([d,s])=>s.n).map(([d,s])=>card(d,`${s.on} of ${s.n}`,{foot:'KPIs on target',st:s.on===s.n?'good':s.on===0?'bad':'warn'}))]),
-      table('Scorecard',{span:12,hint:ks.length?`${ks.length===1?ymLabel(ks[0]):ks.length+' months: '+ymLabel(ks[0])+' to '+ymLabel(last)} · YTD column is the year to date at ${ymLabel(last)}`:'',maxH:900,
+      table('Scorecard',{span:12,hint:ks.length?`${ks.length===1?ymLabel(ks[0]):ks.length+' months: '+ymLabel(ks[0])+' to '+ymLabel(last)} · YTD column is the year to date at ${ymLabel(last)}${R.some(r=>r._calc)?' · '+uniq(R.filter(r=>r._calc).map(ymKey)).sort().map(ymLabel).join(', ')+' worked out from the raw files (no SCTCM report uploaded yet), so plant availability and the bottling detail KPIs are not shown':''}`:'',maxH:900,
         cols:[{h:'KPI',k:'k',l:1},{h:'Actual',k:'a',fmt:(v,r)=>kpiFmt(r.k)(v)},{h:'Budget',k:'b',fmt:(v,r)=>kpiFmt(r.k)(v)},{h:'Prior year',k:'py',fmt:(v,r)=>kpiFmt(r.k)(v)},
           {h:'vs budget',k:'vs',fmt:(v,r)=>v==null?'–':(v>0?'+':'')+kpiFmt(r.k)(v),cls:(v,r)=>r.st==='good'?'g':r.st==='bad'?'b':''},{h:'YTD',k:'ytd',fmt:(v,r)=>kpiFmt(r.k)(v)},{h:'Status',k:'st',html:1,l:1,fmt:stPill}],rows}),
     ];

@@ -160,16 +160,17 @@ page({sec:'sc',id:'failure-modes',title:'Downtime failure modes',tab:'Failure mo
     ];
   }});
 
-page({sec:'sc',id:'efficiency',title:'Production efficiency',tab:'Production efficiency',tables:['Fact_Efficiency','Fact_Bottling','Cost_Ops_Comparison'],
-  slicers:[yearSlicer(['Fact_Efficiency','Fact_Bottling'],{def:()=>{const y=latestYear('Fact_Efficiency');return y?[y]:[]}}),monthSlicer(['Fact_Efficiency','Fact_Bottling']),
-    fieldSlicer('fam','Product family','Fact_Efficiency','Product Family',{also:{Fact_Bottling:r=>r['Product Family']}}),segSlicer('view','View',['Cases','Share of total'],'Cases')],
+page({sec:'sc',id:'efficiency',title:'Production efficiency',tab:'Production efficiency',tables:['Fact_Efficiency','Cost_Ops_Comparison'],
+  slicers:[yearSlicer(['Fact_Efficiency'],{def:()=>{const y=latestYear('Fact_Efficiency');return y?[y]:[]}}),monthSlicer(['Fact_Efficiency']),
+    fieldSlicer('fam','Product family','Fact_Efficiency','Product Family'),segSlicer('view','View',['Cases','Share of total'],'Cases')],
   build(c){
-    const R=c.rows('Fact_Efficiency'),B=c.rows('Fact_Bottling');const share=c.one('view')==='Share of total';
+    const R=c.rows('Fact_Efficiency');const share=c.one('view')==='Share of total';
     const cases=sum(R,'Cases Bottled');const months=uniq(R.map(ymKey));
     const wEff=div(sum(R,r=>isNum(r['Line Efficiency %'])&&isNum(r['Cases Bottled'])?r['Line Efficiency %']*r['Cases Bottled']:null),sum(R.filter(r=>isNum(r['Line Efficiency %'])),'Cases Bottled'));
-    // cost per case: operating cost ÷ cases bottled, for the months that have cost figures
-    const COST=c.all('Cost_Ops_Comparison');const cm=new Set(COST.map(ymKey));const Bc=B.filter(r=>cm.has(ymKey(r)));const costM=new Set(Bc.map(ymKey));
-    const cpc=div(sum(COST.filter(r=>costM.has(ymKey(r))),'Total Ops Cost'),sum(Bc,'Cases Bottled'));
+    // cost per case: operating cost ÷ cases bottled, for the selected months that have cost figures
+    const COST=c.all('Cost_Ops_Comparison');const cm=new Set(COST.map(ymKey));const Bc=R.filter(r=>cm.has(ymKey(r)));const costM=new Set(Bc.map(ymKey));
+    const cpc=c.sel('fam').length?null:div(sum(COST.filter(r=>costM.has(ymKey(r))),'Total Ops Cost'),sum(Bc,'Cases Bottled'));
+    const B=R;
     const m=byMonth(R,rs=>sum(rs,'Cases Bottled'));const mtot=m.data.reduce((a,b)=>a+(b||0),0);
     const eff=byMonth(R,rs=>div(sum(rs,r=>isNum(r['Line Efficiency %'])&&isNum(r['Cases Bottled'])?r['Line Efficiency %']*r['Cases Bottled']:null),sum(rs.filter(r=>isNum(r['Line Efficiency %'])),'Cases Bottled')));
     const fam=byCat(B,'Product Family',rs=>sum(rs,'Cases Bottled'));const ftot=sum(B,'Cases Bottled');
@@ -179,14 +180,14 @@ page({sec:'sc',id:'efficiency',title:'Production efficiency',tab:'Production eff
     const effFam=byCat(R,'Product Family',rs=>avg(rs,'Line Efficiency %'));
     const catD=byCat(R,'Category',rs=>sum(rs,'Cases Bottled'));
     return [
-      card('Cases produced',cases,{span:3,foot:`${months.length} month${months.length===1?'':'s'}, efficiency log`}),
+      card('Cases produced',cases,{span:3,foot:`${months.length} month${months.length===1?'':'s'}, Gross Efficiency log`}),
       card('Average cases per month',div(cases,months.length),{span:2,foot:'Cases ÷ months'}),
       card('Line efficiency',wEff,{fmt:F.p1,span:2,foot:'Weighted by cases bottled'}),
       card('BBT volume',sum(R,'BBT HLs'),{fmt:F.n0,unit:'hl',span:2,foot:'Bright beer tank hectolitres'}),
-      card('Cost per case',cpc,{fmt:F.ec2,span:3,foot:costM.size?`Operating cost ÷ cases, ${[...costM].sort().map(k=>ymLabel(k,true)).join(', ')}`:'No cost figures for these months'}),
+      card('Cost per case',cpc,{fmt:F.ec2,span:3,na:c.sel('fam').length?'All products only':'No cost figures',foot:costM.size?`Operating cost ÷ cases, ${[...costM].sort().map(k=>ymLabel(k,true)).join(', ')}`:'No cost figures for these months'}),
       chart('Line efficiency by month',{kind:'line',labels:eff.labels,sets:[{label:'Line efficiency %',data:eff.data,vl:true}],fmt:F.p1,zero:false}),
       chart(share?'Share of cases by month':'Cases produced by month',{kind:'bar',labels:m.labels,sets:[{label:share?'Share %':'Cases',data:share?m.data.map(v=>mtot?v/mtot*100:null):m.data,color:PAL[1]}],fmt:share?F.p1:F.big}),
-      chart(share?'Share of cases by product family':'Cases produced by product family',{kind:'hbar',size:'xl',hint:'Daily bottling log',labels:fam.labels,sets:[{label:share?'Share %':'Cases',data:share?fam.data.map(v=>ftot?v/ftot*100:null):fam.data}],fmt:share?F.p1:F.n0}),
+      chart(share?'Share of cases by product family':'Cases produced by product family',{kind:'hbar',size:'xl',hint:'Gross Efficiency log',labels:fam.labels,sets:[{label:share?'Share %':'Cases',data:share?fam.data.map(v=>ftot?v/ftot*100:null):fam.data}],fmt:share?F.p1:F.n0}),
       chart(share?'Product mix by month (share of cases)':'Cases by product family and month',{kind:'stack',size:'xl',hint:'Top 8 families, the rest grouped as Other',labels:m.labels,sets:stackSets,fmt:share?F.p0:F.big}),
       chart('Average line efficiency by product family',{kind:'hbar',size:'lg',labels:effFam.labels,sets:[{label:'Line efficiency %',data:effFam.data,color:PAL[2]}],fmt:F.p1}),
       chart('Cases by category',{kind:'donut',size:'lg',labels:catD.labels,sets:[{data:catD.data}],fmt:F.n0}),

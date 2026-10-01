@@ -126,19 +126,30 @@ page({sec:'sc',id:'cost-performance',title:'Cost vs performance',tab:'Cost vs pe
 
 const PK_ORDER=['Production Cases','OEE','Plant Availability','FTR','Maintenance Compliance','Extract Recovery','Brews Per Day','Total Bottling Loss','Process Loss Vol.','Water','Fuel','Electricity','CO2'];
 page({sec:'sc',id:'production-kpis',title:'Production KPIs',tab:'Production KPIs',tables:['Production_KPIs'],
-  slicers:[segSlicer('period','Period',['MTD','YTD'],'MTD')],
+  slicers:[{id:'month',label:'Month',kind:'single',tables:{},
+      options:()=>uniq((T.Production_KPIs||[]).map(ymKey).filter(Boolean)).sort().map(k=>({v:k,l:ymLabel(k)})),
+      def:()=>{const ks=uniq((T.Production_KPIs||[]).map(ymKey).filter(Boolean)).sort();return ks.slice(-1)}},
+    segSlicer('period','Period',['MTD','YTD'],'MTD')],
   build(c){
-    const per=c.one('period');const R=c.all('Production_KPIs').filter(r=>String(r.Period).toUpperCase()===per);
+    const per=c.one('period'),mon=c.one('month');
+    const all=c.all('Production_KPIs').filter(r=>String(r.Period).toUpperCase()===per);
+    // monthly rows come from the raw files; rows without a month are the snapshot in CBG_Production_KPIs
+    const R=all.filter(r=>mon?(ymKey(r)===mon||r._snap||!r._m):true);
+    const snap=R.filter(r=>r._snap).map(r=>r.KPI);
     const kpis=uniq([...PK_ORDER.filter(k=>R.some(r=>r.KPI===k)),...R.map(r=>r.KPI)]);
     const tile=k=>{const r=R.find(x=>x.KPI===k);if(!r)return card(k,null);const up=String(r['Better Direction']).toLowerCase()!=='lower';
       const pct=r.Unit==='%';const f=pct?F.p1:r.Unit==='cases'?F.n0:F.n1;
-      return card(k,r.Actual,{fmt:f,unit:pct?'':r.Unit,st:status(r.Actual,r.Budget,up)||'',sub:vsLine([r.Budget!=null?`Budget ${f(r.Budget)}`:'',r['Last Year']!=null?`Last year ${f(r['Last Year'])}`:'']),foot:up?'Higher is better':'Lower is better'})};
+      return card(k,r.Actual,{fmt:f,unit:pct?'':r.Unit,st:status(r.Actual,r.Budget,up)||'',sub:vsLine([r.Budget!=null?`Budget ${f(r.Budget)}`:'',r['Last Year']!=null?`Last year ${f(r['Last Year'])}`:'']),foot:r._snap?'From CBG_Production_KPIs (not in the raw files)':up?'Higher is better':'Lower is better'})};
     const out=['Production Cases','OEE','Plant Availability','FTR','Maintenance Compliance','Extract Recovery','Brews Per Day'].filter(k=>kpis.includes(k));
     const rest=kpis.filter(k=>!out.includes(k));
-    const pc=R.find(r=>r.KPI==='Production Cases');
+    // production cases by month, actual vs budget (raw rows)
+    const pcs=all.filter(r=>r.KPI==='Production Cases'&&r._m).sort((a,b)=>ymKey(a).localeCompare(ymKey(b)));
+    const ks=pcs.map(ymKey);
+    const notes=snap.length?[`${snap.join(', ')}: taken from the CBG_Production_KPIs workbook, because the raw files don't hold ${snap.length>1?'these figures':'this figure'}.`]:[];
+    if(!all.some(r=>r['Last Year']!=null&&r._m))notes.push('Last year appears once the previous year\'s raw files are uploaded.');
     return [sec('Output and efficiency'),row(out.map(tile)),sec('Loss and utilities intensity'),row(rest.map(tile)),
-      chart(`Production cases ${per}: actual vs budget vs last year`,{span:5,kind:'bar',labels:['Actual','Budget','Last year'],sets:[{label:'Cases',data:pc?[pc.Actual,pc.Budget,pc['Last Year']]:[],colors:[PAL[0],PAL[5],PAL[2]]}],fmt:F.n0,legend:false}),
-      table(`All KPIs, ${per}`,{span:7,maxH:640,cols:[{h:'KPI',k:'KPI',l:1},{h:'Unit',k:'Unit',l:1},{h:'Actual',k:'Actual',fmt:(v,r)=>r.Unit==='cases'?F.n0(v):F.n1(v)},{h:'Budget',k:'Budget',fmt:(v,r)=>r.Unit==='cases'?F.n0(v):F.n1(v)},{h:'Last year',k:'Last Year',fmt:(v,r)=>r.Unit==='cases'?F.n0(v):F.n1(v)},
+      chart(`Production cases by month (${per}): actual vs budget`,{span:5,kind:'bar',labels:ks.map(k=>ymLabel(k,oneYear(ks))),sets:[{label:'Actual',data:pcs.map(r=>r.Actual),colors:pcs.map(r=>r.Budget!=null&&r.Actual<r.Budget?'#C0392B':'#01427A')},{label:'Budget',data:pcs.map(r=>r.Budget),type:'line',color:PAL[1],dash:[6,4]}],fmt:F.big}),
+      table(`All KPIs, ${per}${mon?' · '+ymLabel(mon):''}`,{span:7,maxH:640,notes,cols:[{h:'KPI',k:'KPI',l:1},{h:'Unit',k:'Unit',l:1},{h:'Actual',k:'Actual',fmt:(v,r)=>r.Unit==='cases'?F.n0(v):F.n1(v)},{h:'Budget',k:'Budget',fmt:(v,r)=>r.Unit==='cases'?F.n0(v):F.n1(v)},{h:'Last year',k:'Last Year',fmt:(v,r)=>r.Unit==='cases'?F.n0(v):F.n1(v)},
         {h:'Status',l:1,html:1,f:r=>status(r.Actual,r.Budget,String(r['Better Direction']).toLowerCase()!=='lower'),fmt:v=>v?`<span class="pill ${v==='good'?'g':'b'}">${v==='good'?'On target':'Off target'}</span>`:'–'}],
         rows:kpis.map(k=>R.find(r=>r.KPI===k))}),
     ];
