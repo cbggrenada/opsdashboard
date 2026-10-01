@@ -1,11 +1,13 @@
 
-Built 2026-10-01T15:40:48.799Z from 30 file(s). Latest data: 2026-10-01
+Built 2026-10-01T15:42:08.380Z from 37 file(s). Latest data: 2026-10-01
 - April_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis April 2026", 30 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis April 2026", 30 days)
     not needed: Entries April 2026, Steam Mass Flow , Fuel , Water , Elec.April 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - August'26 Daily Process Report 2026.xlsx
     not needed: Dec 18th, Aug 2nd, Aug 3rd , Aug 4th, Aug 5th, Aug 6th, Aug 7th, Aug 12th, Aug 13th , Aug 14th&15th, Aug 17th , Aug 18th, Aug 19th , Aug 20th , Aug 21st-22nd, Aug 24th, Aug 25th , Aug 26th, Aug 27th , Aug 28th , Aug 31st, MTD_Links, YTD_Links, KPIs, Brewer Performance
+- August_2026.xls
+    not needed: STAG, GUINNESS, CARIB, VITAMALT, STARMALT, MACKESON, HR Pilsener, IPA, APA, CARIBE, MTD, YTD 2026
 - August_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis August 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis August 2026", 31 days)
@@ -48,6 +50,12 @@ Built 2026-10-01T15:40:48.799Z from 30 file(s). Latest data: 2026-10-01
     used    YTD_Summary (sheet "YTD_Summary", 48 rows)
     used    Equipment_Pareto (sheet "Equipment_Pareto", 11 rows)
     not needed: Category_Map
+- Daily_Bottling_Summary_2026.xlsx
+    not needed: January_17, February_17, March_17, April_17, May_17, June_17 , July_17, Aug_17 , Sep_17, October_17, November_17, December_17 , January_26, February_26, March_26, April_26, May_26, June_26, Change-Over Tracking, July_26, August_26, September_26 , October_26, November_26, December_26, Production Tracking 2017-2023, January_16, February_16, March_16, April_16, May_16, June_16, July_16, August_16, September_16, October_16, November_16, December_16
+- FTR Calculations 2026.xlsx
+    not needed: FTR Spec Change (Overall), FTR Spec Change (By Area), January '25, February '24, March '24, April '24, June '24 , July '24, August '24, September '24 , October '24 , November '24 , December '24, May '20, June'20, September '20, November '18, December '18, FTR Trend, FTR Parameter Trend, February '25 , March'25 , Summary Report, Monthly Comparison Graphs, FTR Targets, Sheet1
+- FTR Manufacturing 2026.xlsx
+    not needed: MTD Performance, Brewer's Performance , MTD - Time & OG, Brewer's Performance- Extract, FTR Brewhouse-New, Chart2, FTR Brewhouse, FTR Fermentation, GBL BBT Score , FTR BBT, FTR Packaging, FTR Finished Product, GBL  Finished Product , Chart1
 - February_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis February 2026", 28 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis February 2026", 28 days)
@@ -70,6 +78,10 @@ Built 2026-10-01T15:40:48.799Z from 30 file(s). Latest data: 2026-10-01
     not needed: Dim_Product, Dim_MonthYear
 - GBL_Failure_Modes.xlsx
     used    Failure_Modes (sheet "Failure_Modes", 135 rows)
+- GBL_Line_Downtime_2026.xlsx
+    not needed: Print, Monthly summary loss, Pareto YTD, Pareto Data, Pareto analysis month , Uncaser Downtime Detail , Washer Downtime Detail, EBI Downtime Detail, Filler Downtime Detail, Pasteurizer Downtime Detail, Videojet Downtime Detail , Labeler Downtime Detail, Packer Downtime Detail  , Carton Errector-sealer Detail, Conveyor Downtime (new), Org & Tech Downtime, Sept, Oct, Data Sheet, 2 weeks Downtime Trend, Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Nov, Dec
+- Gross_Efficiency_2026.xlsx
+    not needed: January_2026, February_2026, March_2026, April_2026 , May_2026, June_2026, July_2026, August_2026, September_206, October_2026, November_2026, December_2026
 - January_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis January 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis January 2026", 31 days)
@@ -96,7 +108,9 @@ Built 2026-10-01T15:40:48.799Z from 30 file(s). Latest data: 2026-10-01
     not needed: Entries May 2026, Steam Mass Flow , Fuel , Water , Elec.May 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - September'26 Daily Process Report 2026.xlsx
     not needed: Dec 18th, Sept 1st, Sept 2nd, Sept 3rd, Sept 4th, Sept 7th, Sept 8th, Sept 9th, Sept 10th, Sept 11th , Sept 14th, Sept 15th, Sept 16th, Sept 17th , Sept 18th, Sept 21st, Sept 22nd, Sept 23rd , Sept 24th, Sept 25th , Sept 28th, Sept 29th, Sept 30th, MTD_Links, YTD_Links, KPIs, Brewer Performance
+- September_2026.xls
+    not needed: STAG, GUINNESS, CARIB, VITAMALT, STARMALT, MACKESON, HR Pilsener, IPA, APA, CARIBE, MTD, YTD 2026
 - September_26_Utilities_Tracking.xlsx
-    used    Fact_Utilities_Monthly (sheet "Utility Analysis September 2026", 29 days)
-    used    Fact_Utilities_Weekly (sheet "Utility Analysis September 2026", 29 days)
+    used    Fact_Utilities_Monthly (sheet "Utility Analysis September 2026", 30 days)
+    used    Fact_Utilities_Weekly (sheet "Utility Analysis September 2026", 30 days)
     not needed: Entries September 2026, Sheet2, Steam Mass Flow , Fuel , Water , Elec.SEPTEMBER 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
