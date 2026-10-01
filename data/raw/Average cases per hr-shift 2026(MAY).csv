@@ -1,0 +1,71 @@
+AVERAGE CASES PER HOUR / SHIFT - MAY 2026,,,,,,,,,,,,,,,,,,,,
+DATE ( MM/DD/YYYY),SUPERVISOR,SHIFT ,PRODUCT,FILL TIME/ Mins,CASES BOTTLED/Cs,LINE RATED EFFICIENCY/%,AVERAGE CASE PER HOUR/ Cs/Hr,FILLER COUNTER/ BTLS,LOW FILLS /Cs,BOTTLE LOSS (AFTER FILLER),# REWORKS/ cases,Reason ,CHANGEOVER TIME/MINS,EXPECTED CHANGEOVER TIME,TOTAL DOWNTIME /MINS,DOWNTIME DUE TO PERSONNEL,REASON,PRODUCT REWORKED,CASES REWORKED,COMMENTS
+4-May-2026,Micah Noel,12AM-7AM,GINSENG,420,462,9.32,66.0,,17,#DIV/0!,24,Missing labels,,,309,5,Uncaser,,,EBI vacuum pressure
+4-May-2026,Dorien Andrew,7AM-3PM,VITAMALT,480,1006,17.75,125.8,,5,#DIV/0!,,,220,120,62,17,Pasteurizer,,,
+4-May-2026,Michael Julien,3PM-11PM,VITAMALT,480,2878,50.79,359.8,,8,#DIV/0!,,,,,100,3,Palletizer,,,
+5-May,Micah Noel,11PM - 7AM,VITAMALT,480,778,18.14,128.5,,9,#DIV/0!,276,damaged crates,,,,,,,,
+,,,CARIB FLINT,,250,,,9101,15,30.1175695,,,118,120,266,,,,,"High rejection for OSW on EBI, vacuum fault on filler"
+5-May-2026,Dorien Andrew,7AM - 3PM,CARIB FLINT,480,0,0.0,0.0,,,#DIV/0!,,,,,445,,,Stag sorted for missing date code. 9 good.,75,"EBI vacuum due to starwheel, Date coder not printing"
+5-May-2026,Michael Julien,3PM-11PM,CARIB FLINT,480,2127,37.54,265.9,,33,,1,Missing labels,,,218,30,Lunch,,,EBI rejection due to conveyor. Date coder not printing
+6-May-2026,Micah Noel,11PM - 7AM,CARIB AMBER,480,2826,49.87,353.3,,20,#DIV/0!,,,,,118,,,,,EBI test bottle broke
+6-May-2026,Dorien Andrew,7AM - 3PM,CARIB AMBER,480,3454,60.95,431.8,,5,#DIV/0!,,,,,52,,,,,
+6-May-2026,Michael Julien,3PM - 11PM,CARIB AMBER,480,3570,63.0,446.3,,4,#DIV/0!,3,Missing labels,,,64,,,Carib,3,
+7-May-2026,Micah Noel,11PM - 7AM,CARIB AMBER,480,3559,62.81,444.9,,14,#DIV/0!,,,,,76,,,,,
+7-May-2026,Dorien Andrew,7AM - 3PM,TING ORIGINAL,480,1154,20.36,144.3,,4,#DIV/0!,179,High TA,60,60,198,,,,,Ting product adjustment
+7-May-2026,Michael Julien,3PM - 11PM,TING ORIGINAL,480,621,51.55,221.9,,1,#DIV/0!,6,Missing labels,,,78,,,,,
+,,,Stag Local,,2300,,,,2,#DIV/0!,,,75,,,,,,,
+8-May-2026,Micah Noel,11PM - 7AM,Stag Local,480,3331,58.78,416.4,,6,#DIV/0!,,,,,104,,,,,Filler communication fault
+8-May-2026,Dorien Andrew,7AM - 3PM,GUINESS,420,2582,52.07,368.9,,2,#DIV/0!,,,11,10,89,,,,,Filtration problems - waiting on product.
+8-May-2026,Michael Julien,3PM - 11PM,GUINESS,420,1427,28.78,203.9,,,#DIV/0!,,,,,197,,,,,Filtration problems - waiting on product.
+9-May-2026,Dorien Andrew,7AM - 3PM,GUINESS,480,2304,40.66,288.0,,5,#DIV/0!,,,,,169,,,,,"Production startup, waiting on product, filler communication fault"
+9-May-2026,Michael Julien,3PM - 11PM,GUINESS,480,3549,62.63,443.6,,7,#DIV/0!,2491,damaged crates,,,105,3,Palletizer,,,damaged crates at uncaser and packer
+11-May-2026,Micah Noel,7AM - 3PM,CARIB AMBER,480,2700,47.65,337.5,74560,6,12.89699571,,,,,163,,,,,Production preparation. Filler infeed work=m
+11-May-2026,Dorien Andrew,3PM - 11PM,CARIB AMBER,480,3660,64.59,457.5,,,#DIV/0!,,,,,99,,,,,Waiting on product
+12-May-2026,Michael Julien,11PM - 7AM,CARIB AMBER,480,3263,57.58,407.9,,,#DIV/0!,,,,,47,,,,,
+12-May-2026,Micah Noel,7AM - 3PM,Stag Local,480,2280,43.96,311.4,,0,#DIV/0!,,,20,10,203,2,Crowner,,,"clean washer rinse tanks, labeller  adjustment"
+,,,CARIB AMBER,,211,,,62674,5,91.7286275,133,damaged crates,,,,,,,,
+12-may-20256,Dorien Andrew,3PM - 11PM,Stag Local,480,3000,52.94,375.0,,6,#DIV/0!,140,damaged crates,,,103,19,Palletizer,,,
+13-May-2026,Michael Julien,11PM - 7AM,Stag Local,480,861,28.08,198.9,,,#DIV/0!,,,,,,,,,,Old crates
+,,,CARIB AMBER,,730,,,,2,#DIV/0!,580,damaged crates,74,10,80,,,,,"Re-washed bottles, old crates, labeler adjustment"
+13-May-2026,Micah Noel/Tyrell Bartholemew,7AM - 3PM,CARIB AMBER,480,3210,56.65,401.3,,4,#DIV/0!,,,,,60,,,,,
+13-May-2026,Dorien Andrew,3PM - 11PM,CARIB AMBER,480,2810,49.59,351.3,,4,#DIV/0!,,,,,150,9,Palletizer,,,Filler infeed worm out of timing. Re-washed bottles
+14-May-2026,Michael Julien,11PM - 7AM,CARIB AMBER,480,1204,52.66,373.0,,,#DIV/0!,,,,,92,,,,,
+,,,Stag Local,,1780,,,,,#DIV/0!,,,17,10,,,,,,
+14-May-2026,Micah Noel,7AM - 3PM,Stag Local,480,993,45.23,320.4,,7,#DIV/0!,183,damaged crates,94,60,,17,Lab swab,,,
+,,,SHANDY SORREL,,1570,,,44950,4,15.95995551,,,,,91,3,Crowner,,,
+14-May,Dorien Andrew,3PM - 11PM,SHANDY SORREL,480,1010,48.92,346.5,,,#DIV/0!,,,,,,,,,,
+,Dorien Andrew,3PM - 11PM,MACKESON,,1762,,,,2,#DIV/0!,,,55,60,83,,,,,
+15-May,Michael Julien,11PM - 7AM,MACKESON,480,1134,25.84,183.0,,2,#DIV/0!,350,damaged crates,,,,,,,,
+,,,VITAMALT,,330,,,,,#DIV/0!,,,143,120,144,,,,,Awaiting product from Filtratin
+15-May-2026,Micah Noel,7AM-2PM,VITAMALT,420,2600,52.44,371.4,,10,#DIV/0!,,,,,114,12,Toolbox,,,Rewashed bottles heavy rejection
+15-May-2026,Dorien Andrew,3PM - 11PM,VITAMALT,420,2720,54.86,388.6,70841,1,7.816095199,2,Missing labels,5,,35,,,Vita Malt labeled,2,Ginger sent before blowing out line
+16-May-2026,Micah Noel,7AM - 3PM,CARIB AMBER,480,2576,45.46,322.0,,3,#DIV/0!,2976,damaged crates,,,156,,,,,Production startup - 78 mins. Stop for haze
+16-May-2026,Dorien Andrew,3PM - 11PM,CARIB AMBER,420,3116,62.84,445.1,,14,#DIV/0!,,,,,25,,,,,
+18-May-2026,Dorien Andrew,11PM - 7AM,STARMALT,420,1804,36.38,257.7,,3,#DIV/0!,,,,,174,,,,," Production startup -100 mins. Waiting on product.Stuck automatic valve on washer, EBI conveyor not responding. Sensor on filler infeed"
+18-May-2026,Michael Julien,7AM - 3PM,STARMALT,480,3486,61.52,435.8,,,#DIV/0!,9,Missing labels,,,71,,,,,
+18-May-2026,Micah Noel,3PM - 11PM,STARMALT,480,524,50.65,358.8,,0,#DIV/0!,145,damaged crates,58,60,151,64,Lab checking BBT,,,
+,,,CARIB AMBER,,2346,,,2346,10,-2310.230179,2346,damaged crates,60,60,,,,,,
+19-May-2026,Dorien Andrew,11PM - 7AM,CARIB AMBER,480,2534,44.72,316.8,,8,#DIV/0!,,,19,20,108,3,Palletizer,,,"Waiting product from lab, uncaser malfunction. Rewashed bottles"
+19-May-2026,Michael Julien,7AM - 3PM,CARIB AMBER,480,1933,34.11,241.6,,2,#DIV/0!,,,,,151,,,,,"Heavy rejection at EBI, uncaser malfunction"
+19-May-2026,Micah Noel,3PM - 11PM,CARIB FLINT,480,1395,36.05,255.4,37881,4,11.36453631,,,,,,,,,,
+,,,Stag Local,,648,,,21637,11,26.90299025,,,48,10,157,,,,,"Labeler adjustments, heavy rejection"
+20-May-2026,Dorien Andrew,11PM - 7AM,Stag Local,480,2989,52.75,373.6,,4,#DIV/0!,,,35,20,43,,,,,Rewashed bottles
+20-May-2026,Micah Noel,7AM - 3PM,Stag Local,480,2000,40.94,290.0,,1,#DIV/0!,,,,,,,,,,"Labeler gripper cylinder, EBI adjustment"
+,,,CARIB AMBER,,320,,,,3,#DIV/0!,,,15,10,159,33,Lab swab,,,Mid week cleaning
+20-May-2026,Tyrell Bartholemew,3PM - 11PM,CARIB AMBER,480,3566,62.93,445.8,,10,#DIV/0!,14,Missing labels,,,74,,,,,
+21-May-2026,Dorien Andrew,11PM - 7AM,CARIB AMBER,480,1584,49.91,353.5,,1,#DIV/0!,,,,,,,,,,
+,,,Stag Local,,1244,,,,1,#DIV/0!,,,14,10,88,,,,,"toolbox, pasteurizer discharge conveyor cut off"
+21-May-2026,Michael Julien,7AM - 3PM,Stag Local,480,3548,62.61,443.5,,6,#DIV/0!,,,,,81,,,,,"ebi HEAVY REJECTION, BAD CRATES"
+21-May-2026,Micah Noel,3PM - 11PM,Stag Local,480,813,27.23,192.9,,3,#DIV/0!,185,damaged crates,,,202,,,,,Waiting on product - pearsecco
+,,,PEARSECO,,730,,,24030,2,26.89138577,,,64,60,,,,,,"washer, pasteurizer discharge conveyors"
+22-May-2026,Dorien Andrew,11PM - 7AM,PEARSECO,480,571,36.62,259.4,,2,#DIV/0!,,,,,,,,,,
+,,,Caribe Rose,,1504,,,,3,#DIV/0!,,,32,,116,,,,,Pasteurizer conveyor
+22-May-2026,Michael Julien,7AM-2PM,Caribe Rose,420,892,35.57647059,252.0,,,#DIV/0!,,,,,,,,,,
+,,,TING ORIGINAL,,872,,,,,#DIV/0!,,,70,,131,10,Depalletizer,,,Heavy rejection on EBI
+22-May-2026,Micah Noel,2PM-9PM,TING ORIGINAL,420,899,39.54957983,280.1,,3,#DIV/0!,,,,,28,,,,,
+,,,CARIB AMBER,,1062,,,25612,3,0.20302983,,,84,,,,,,,
+26-May-2026,Dorien Andrew,7AM - 3PM,CARIB AMBER,480,790,13.94117647,98.8,,3,#DIV/0!,,,,,,,,,,
+26-May-2026,Michael Julien,3PM - 11PM,CARIB AMBER,480,3226,56.92941176,403.3,,,#DIV/0!,,,,,,,,,,
+27-May-2026,Micah Noel,11PM - 7AM,CARIB AMBER,480,2907,51.3,363.4,53429,7,-30.89520672,,,,,,,,,,
+27-May-2026,Dorien Andrew,7AM - 3PM,CARIB AMBER,480,1304,23.01176471,163.0,,,#DIV/0!,,,,,,,,,,
+28-May-2026,Micah Noel,11PM - 7AM,STARMALT,480,2067,36.47647059,258.4,,6,,,,,,,,,,,

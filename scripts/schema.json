@@ -1,0 +1,273 @@
+{
+ "FactYTDBrews": {
+  "Month": "text",
+  "MonthSort": "num",
+  "Brand": "text",
+  "Brew No": "text",
+  "Brewer": "text",
+  "Brewing Time": "num",
+  "Brew Time Mins": "num",
+  "Brew Time Flag": "text",
+  "Cool Time": "num",
+  "Extract Recovery": "num",
+  "Boil Off": "num",
+  "PG Lab": "num",
+  "PG Cellar": "num",
+  "PG Drop": "num",
+  "Remarks": "text",
+  "Source Sheet": "text",
+  "Report Days": "num"
+ },
+ "YTD_Summary": {
+  "Date": "date",
+  "Month": "text",
+  "MonthNum": "num",
+  "Line": "text",
+  "Bucket": "text",
+  "Hours": "num"
+ },
+ "Equipment_Pareto": {
+  "Equipment": "text",
+  "Hours": "num",
+  "% of Total": "num",
+  "Cumulative %": "num"
+ },
+ "Daily_2Week": {
+  "Date": "date",
+  "DowntimeMinutes": "num",
+  "DowntimeHours": "num",
+  "Month": "text",
+  "MonthNum": "num"
+ },
+ "Pareto_2Week": {
+  "Rank": "num",
+  "Contributor": "text",
+  "Minutes": "num",
+  "Hours": "num",
+  "Percent": "num",
+  "Cumulative %": "num",
+  "Month": "text",
+  "MonthNum": "num"
+ },
+ "Fact_Downtime": {
+  "Month": "text",
+  "Category": "text",
+  "Hours": "num"
+ },
+ "Dim_Category": {
+  "Category": "text",
+  "Type": "text",
+  "Sort": "num"
+ },
+ "Fact_Downtime_3Yr": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "MonthYear": "date",
+  "Category": "text",
+  "Type": "text",
+  "Hours": "num"
+ },
+ "Failure_Modes": {
+  "Machine": "text",
+  "Failure Mode": "text",
+  "Hours YTD": "num",
+  "Minutes YTD": "num",
+  "Rank in Machine": "num"
+ },
+ "Fact_Efficiency": {
+  "Date": "date",
+  "Year": "num",
+  "Month": "text",
+  "MonthNum": "num",
+  "MonthYear": "date",
+  "Product Family": "text",
+  "Category": "text",
+  "Available Time": "num",
+  "Fill Time": "num",
+  "Cases Bottled": "num",
+  "Line Efficiency %": "num",
+  "BBT HLs": "num",
+  "Bottled HLs": "num"
+ },
+ "Fact_Bottling": {
+  "Date": "date",
+  "Year": "num",
+  "Month": "text",
+  "MonthNum": "num",
+  "Product Family": "text",
+  "Category": "text",
+  "Cases Planned": "num",
+  "Cases Bottled": "num",
+  "Bottled HLs": "num",
+  "Rejects": "num",
+  "Cases Per Hour": "num",
+  "Fill Minutes": "num"
+ },
+ "Cost_Ops_Comparison": {
+  "Month": "text",
+  "MonthNum": "num",
+  "Total Ops Cost": "num",
+  "Maintenance & Spares Cost": "num",
+  "Energy Cost": "num",
+  "Packaging Material Cost": "num",
+  "Loss & Quality Cost": "num",
+  "Downtime Hours": "num",
+  "Packaging Loss HL": "num",
+  "Packaging Loss %": "num"
+ },
+ "Fact_Packaging": {
+  "Date": "date",
+  "Year": "num",
+  "Month": "text",
+  "MonthNum": "num",
+  "MonthYear": "date",
+  "Product Raw": "text",
+  "Product Family": "text",
+  "Category": "text",
+  "BBT HLs": "num",
+  "Bottled HLs": "num",
+  "Loss HLs": "num",
+  "Loss % (run)": "num",
+  "Cases": "num",
+  "Rejects": "num"
+ },
+ "Dim_LossBand": {
+  "Band": "text",
+  "Min Loss %": "num",
+  "Max Loss %": "num",
+  "Color": "text",
+  "Meaning": "text"
+ },
+ "Pkg_Loss_3Yr": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "BBT HLs": "num",
+  "Bottled HLs": "num",
+  "Loss HLs": "num",
+  "Loss %": "num",
+  "Est Loss Value USD": "num"
+ },
+ "Brew_Loss_3Yr": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "FV HLs": "num",
+  "BBT HLs": "num",
+  "Loss %": "num",
+  "Est Loss Value USD": "num"
+ },
+ "Production_KPIs": {
+  "KPI": "text",
+  "Unit": "text",
+  "Period": "text",
+  "Actual": "num",
+  "Budget": "num",
+  "Last Year": "num",
+  "Better Direction": "text"
+ },
+ "Scorecard_Monthly": {
+  "MonthNum": "num",
+  "Month": "text",
+  "SortKey": "num",
+  "Department": "text",
+  "KPI": "text",
+  "KPI Sort": "num",
+  "Actual": "num",
+  "Prior Year": "num",
+  "YTD": "num",
+  "Budget": "num"
+ },
+ "Fact_ExtractLoss": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "Stage": "text",
+  "LossPct": "num",
+  "TargetPct": "num"
+ },
+ "Fact_BrewsPerDay_Monthly": {
+  "MonthNum": "num",
+  "Month": "text",
+  "SortKey": "num",
+  "Brews Per Day": "num",
+  "Budget": "num",
+  "Total Brews": "num"
+ },
+ "Fact_Export": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "Cases": "num"
+ },
+ "Fact_Utilities_Monthly": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "SortKey": "num",
+  "Utility": "text",
+  "Unit": "text",
+  "Value": "num",
+  "Days": "num"
+ },
+ "Fact_Utilities_Weekly": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "Week": "text",
+  "WeekLabel": "text",
+  "SortKey": "num",
+  "Utility": "text",
+  "Unit": "text",
+  "Value": "num",
+  "Days": "num"
+ },
+ "Fact_Complaints": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "JustifiedComplaints": "num"
+ },
+ "Fact_ComplaintsBrand": {
+  "Brand": "text",
+  "JustifiedComplaints": "num"
+ },
+ "Fact_CostPerCase": {
+  "Category": "text",
+  "ActualYTD_EC": "num",
+  "BudgetYTD_EC": "num"
+ },
+ "Fact_CostPerCaseMonthly": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "Actual_EC": "num",
+  "Budget_EC": "num"
+ },
+ "Fact_Forecast": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "AccuracyPct": "num",
+  "TargetPct": "num"
+ },
+ "Cases_Monthly": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "MonthYear": "date",
+  "SortKey": "num",
+  "Cases Produced": "num",
+  "Budget Cases": "num",
+  "Attainment %": "num"
+ },
+ "Cases_By_Brand": {
+  "Year": "num",
+  "MonthNum": "num",
+  "Month": "text",
+  "Product Family": "text",
+  "Category": "text",
+  "Cases Produced": "num"
+ }
+}

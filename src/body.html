@@ -1,0 +1,135 @@
+<body>
+<header class="hdr">
+  <nav class="nav" aria-label="Dashboard">
+    <div class="brand"><img class="logo" alt="Carib Brewery" src="%%LOGO%%"><span class="nt">Operations dashboard</span></div>
+    <div class="seg" id="secs" role="group" aria-label="Report"></div>
+    <button class="btn primary" id="rptBtn">Generate report</button>
+  </nav>
+  <div class="tabs" id="tabs" role="tablist" aria-label="Pages"></div>
+</header>
+<section class="hero">
+  <svg class="hwave" viewBox="0 0 420 160" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M150 0 C 240 30, 330 80, 420 160 L420 0 Z" fill="currentColor" opacity=".07"/>
+    <path d="M240 0 C 310 26, 370 70, 420 130 L420 0 Z" fill="currentColor" opacity=".12"/>
+    <path d="M330 0 C 370 18, 400 45, 420 85 L420 0 Z" fill="currentColor" opacity=".22"/>
+  </svg>
+  <p class="eyebrow" id="eyebrow">Carib Brewery Grenada | Operations dashboard</p>
+  <h1 class="ptxt" id="ptxt">Loading…</h1>
+  <p class="pmeta" id="pmeta"></p>
+  <p class="upd" id="upd"></p>
+  <div class="fresh" id="fresh" aria-label="Source files for this page"></div>
+  <div class="bar" id="bar"></div>
+</section>
+<main id="main"></main>
+<dialog id="dlg"></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script>
+/* ================= basics ================= */
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTHS_L=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const pad=n=>String(n).padStart(2,'0');
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uniq=a=>[...new Set(a)];
+const isNum=v=>typeof v==='number'&&Number.isFinite(v);
+const nums=(rows,k)=>rows.map(r=>typeof k==='function'?k(r):r[k]).filter(isNum);
+const sum=(rows,k)=>{const a=nums(rows,k);return a.length?a.reduce((x,y)=>x+y,0):null};
+const avg=(rows,k)=>{const a=nums(rows,k);return a.length?a.reduce((x,y)=>x+y,0)/a.length:null};
+const div=(a,b)=>a==null||b==null||!b?null:a/b;
+const ymKey=r=>r._y&&r._m?`${r._y}-${pad(r._m)}`:null;
+const ymLabel=(k,short)=>{if(!k)return '';const [y,m]=k.split('-');return MONTHS[+m-1]+(short?'':' '+y)};
+function group(rows,keyFn){const m=new Map();for(const r of rows){const k=keyFn(r);if(k==null||k==='')continue;if(!m.has(k))m.set(k,[]);m.get(k).push(r)}return m}
+const fmtN=(v,d=0)=>v==null||!isFinite(v)?'–':Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const F={
+  n0:v=>fmtN(v,0),n1:v=>fmtN(v,1),n2:v=>fmtN(v,2),
+  p0:v=>v==null?'–':fmtN(v,0)+'%',p1:v=>v==null?'–':fmtN(v,1)+'%',p2:v=>v==null?'–':fmtN(v,2)+'%',
+  fp1:v=>v==null?'–':fmtN(v*100,1)+'%',
+  h1:v=>v==null?'–':fmtN(v,1)+' h',
+  usd:v=>v==null?'–':(v<0?'-':'')+'US$'+fmtN(Math.abs(v),0),ec:v=>v==null?'–':(v<0?'-':'')+'EC$'+fmtN(Math.abs(v),0),ec2:v=>v==null?'–':(v<0?'-':'')+'EC$'+fmtN(Math.abs(v),2),
+  hhmm:v=>{if(v==null)return '–';const h=Math.floor(v/60),m=Math.floor(v-h*60);return h+':'+pad(m)},
+  big:v=>{if(v==null)return '–';const a=Math.abs(v);return a>=1e6?fmtN(v/1e6,2)+'M':a>=1e4?fmtN(v/1e3,1)+'k':fmtN(v,0)},
+};
+const PAL=['#01427A','#E0A21B','#6FA3D6','#1E8449','#C0392B','#8A96A5','#0B5CA8','#7B5EA7','#2A9D8F','#D9822B','#B5D3EE','#5B6878','#9C6B30','#4C9F70'];
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ================= data ================= */
+let DATA=null,T={},READY=false,LOAD_ERR=null,OFFLINE=false;
+async function loadData(){
+  let j=null;
+  if(location.protocol!=='file:'){
+    try{const r=await fetch('data/ops-data.json?v='+Date.now(),{cache:'no-store'});if(r.ok)j=await r.json();else LOAD_ERR='HTTP '+r.status}catch(e){LOAD_ERR=e.message||String(e)}
+  }
+  const local=[window.OPS_DATA,window.OPS_DATA_EMBED].filter(x=>x&&x.tables).sort((a,b)=>String(b.generatedAt).localeCompare(String(a.generatedAt)))[0];
+  if(!j&&local){j=local;OFFLINE=true}
+  if(j){
+    LOAD_ERR=null;DATA=j;T={};
+    for(const [name,t] of Object.entries(j.tables||{}))T[name]=t.rows.map(r=>{const o={};t.cols.forEach((c,i)=>o[c]=r[i]);return o});
+  }
+  READY=true;
+}
+const has=name=>(T[name]||[]).length>0;
+const latestYear=(...names)=>Math.max(...names.flatMap(n=>(T[n]||[]).map(r=>r._y).filter(isNum)),0)||null;
+/* category type (Machine / Delay) from the downtime workbook */
+let TYPE_OF=null;
+function typeOf(cat){if(!TYPE_OF){TYPE_OF={};(T.Dim_Category||[]).forEach(r=>TYPE_OF[r.Category]=r.Type);(T.Fact_Downtime_3Yr||[]).forEach(r=>{if(r.Type&&!TYPE_OF[r.Category])TYPE_OF[r.Category]=r.Type})}return TYPE_OF[cat]||'Other'}
+
+/* ================= slicers ================= */
+// A slicer filters every table it lists. No ticks = everything.
+function monthSlicer(tables,opt={}){
+  return {id:opt.id||'month',label:opt.label||'Month',kind:'multi',grouped:true,
+    tables:Object.fromEntries(tables.map(t=>[t,ymKey])),
+    options:()=>{const ks=uniq(tables.flatMap(t=>(T[t]||[]).map(ymKey)).filter(Boolean)).sort();return ks.map(k=>({v:k,l:ymLabel(k),g:k.slice(0,4)}))},
+    def:opt.def||null,latest:true};
+}
+function yearSlicer(tables,opt={}){
+  return {id:'year',label:'Year',kind:'multi',tables:Object.fromEntries(tables.map(t=>[t,r=>r._y])),
+    options:()=>uniq(tables.flatMap(t=>(T[t]||[]).map(r=>r._y)).filter(isNum)).sort().map(y=>({v:y,l:String(y)})),
+    def:opt.def||null};
+}
+function fieldSlicer(id,label,table,field,opt={}){
+  const get=typeof field==='function'?field:r=>r[field];
+  const tables=Object.assign({[table]:get},opt.also||{});
+  return {id,label,kind:opt.kind||'multi',tables,
+    options:()=>{let vs=uniq((T[table]||[]).map(get).filter(v=>v!=null&&v!==''));if(opt.order)vs=opt.order(vs);else vs.sort((a,b)=>String(a).localeCompare(String(b)));return vs.map(v=>({v,l:String(v)}))},
+    def:opt.def||null};
+}
+function segSlicer(id,label,values,def){return {id,label,kind:'seg',tables:{},options:()=>values.map(v=>({v,l:v})),def:()=>[def]}}
+
+const SEL={};      // page id -> slicer id -> selected values
+function selOf(p,s){
+  SEL[p.id]=SEL[p.id]||{};
+  if(!(s.id in SEL[p.id]))SEL[p.id][s.id]=s.def?s.def(p):[];
+  // drop values that no longer exist (e.g. after new data)
+  const ok=new Set(s.options().map(o=>o.v));const cur=SEL[p.id][s.id].filter(v=>ok.has(v));
+  if(s.kind!=='multi'&&!cur.length){const o=s.options();if(o.length)cur.push(s.def?(s.def(p)[0]??o[0].v):o[0].v)}
+  return SEL[p.id][s.id]=cur;
+}
+function makeCtx(p){
+  const slicers=p.slicers||[];
+  const sel=id=>{const s=slicers.find(x=>x.id===id);return s?selOf(p,s):[]};
+  const rows=(name,except)=>{
+    let rs=T[name]||[];
+    for(const s of slicers){if(except&&except.includes(s.id))continue;const f=s.tables[name];if(!f)continue;const v=selOf(p,s);if(!v.length)continue;const set=new Set(v);rs=rs.filter(r=>set.has(f(r)))}
+    return rs;
+  };
+  return {p,sel,rows,all:n=>T[n]||[],one:id=>sel(id)[0]};
+}
+const slicerSummary=(p,s)=>{const v=selOf(p,s),o=s.options();if(!v.length)return 'All';const lab=x=>(o.find(q=>q.v===x)||{l:String(x)}).l;return v.length<=2?v.map(lab).join(', '):v.length+' selected'};
+
+/* ================= page registry ================= */
+const SECTIONS=[{id:'brew',name:'Brewing'},{id:'sc',name:'Supply Chain Rundown'},{id:'kpi',name:'KPI Scorecard'}];
+const PAGES=[];
+const page=o=>PAGES.push(o);
+let CUR=null;
+
+/* ================= visual builders (each returns a plain description; render() draws it) ================= */
+const sec=title=>({t:'sec',title});
+const card=(label,v,o={})=>({t:'card',label,v,...o});
+const row=items=>({t:'row',items});
+const chart=(title,o)=>({t:'chart',title,...o});
+const table=(title,o)=>({t:'table',title,...o});
+const text=(title,lines,o={})=>({t:'text',title,lines,...o});
+function status(v,target,higherBetter=true){if(v==null||target==null)return null;return (higherBetter?v>=target:v<=target)?'good':'bad'}
+function vsLine(parts){return parts.filter(Boolean).join(' · ')}
+function notesFor(...tables){return tables.flatMap(t=>(DATA&&DATA.notes&&DATA.notes[t])||[])}
+function noData(...tables){const miss=tables.filter(t=>!has(t));return miss.length?`No data yet. Upload the workbook that holds ${miss.join(', ')}.`:'No data for this selection.'}
+</script>

@@ -1,0 +1,94 @@
+
+Built 2026-10-01T14:58:41.522Z from 26 file(s). Latest data: 2026-10-01
+- April_26_Utilities_Tracking.xlsx
+    used    Fact_Utilities_Monthly (sheet "Utility Analysis April 2026", 30 days)
+    used    Fact_Utilities_Weekly (sheet "Utility Analysis April 2026", 30 days)
+    not needed: Entries April 2026, Steam Mass Flow , Fuel , Water , Elec.April 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- August_26_Utilities_Tracking.xlsx
+    used    Fact_Utilities_Monthly (sheet "Utility Analysis August 2026", 31 days)
+    used    Fact_Utilities_Weekly (sheet "Utility Analysis August 2026", 31 days)
+    not needed: Entries Agust 2026, Steam Mass Flow , Fuel , Water , Elec.August 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- Average cases per hr-shift 2026(MAY).csv
+    used    ShiftLog (sheet "Average cases per hr-shift 2026(MAY).csv", 69 rows)
+- CBG_Brewing_KPIs_Monthly_2026.xlsx
+    used    Fact_BrewsPerDay_Monthly (sheet "Fact_BrewsPerDay_Monthly", 7 rows)
+    not needed: Fact_ExtractLoss_Monthly
+- CBG_Brewing_Loss_3Yr.xlsx
+    used    Brew_Loss_3Yr (sheet "Brew_Loss_3Yr", 32 rows)
+- CBG_Cases_Produced_2026.xlsx
+    used    Cases_Monthly (sheet "Cases_Monthly", 7 rows)
+    used    Cases_By_Brand (sheet "Cases_By_Brand", 84 rows)
+    not needed: Cases_YTD
+- CBG_Cost_Comparison_2026.xlsx
+    used    Cost_Ops_Comparison (sheet "Cost_Ops_Comparison", 5 rows)
+- CBG_KPI_Monthly_2026.xlsx
+    used    Scorecard_Monthly (sheet "Scorecard_Monthly", 119 rows)
+- CBG_Packaging_Loss_3Yr.xlsx
+    used    Pkg_Loss_3Yr (sheet "Pkg_Loss_3Yr", 32 rows)
+- CBG_Production_KPIs_2026.xlsx
+    used    Production_KPIs (sheet "Production_KPIs", 26 rows)
+- CBG_Supply_KPI_Model_2026.xlsx
+    used    Fact_ExtractLoss (sheet "Fact_ExtractLoss", 28 rows)
+    used    Fact_Complaints (sheet "Fact_Complaints", 44 rows)
+    used    Fact_ComplaintsBrand (sheet "Fact_ComplaintsBrand", 8 rows)
+    used    Fact_Forecast (sheet "Fact_Forecast", 18 rows)
+    used    Fact_Export (sheet "Fact_Export", 14 rows)
+    used    Fact_CostPerCase (sheet "Fact_CostPerCase", 12 rows)
+    used    Fact_CostPerCaseMonthly (sheet "Fact_CostPerCaseMonthly", 2 rows)
+    not needed: Dim_Month, Scorecard, Fact_BrewsPerDay, Fact_Utilities
+- CBG_YTD_Brewing_Model_2026.xlsx
+    used    FactYTDBrews (sheet "YTD Brews", 1301 rows)
+- CaribBrewery_PackagingLoss_Model.xlsx
+    used    Fact_Packaging (sheet "Fact_Packaging", 530 rows)
+    used    Dim_LossBand (sheet "Dim_LossBand", 3 rows)
+    not needed: Dim_Product, Monthly_Summary, Product_Summary
+- CaribBrewery_PlanAttainment_Model.xlsx
+    used    YTD_Summary (sheet "YTD_Summary", 48 rows)
+    used    Equipment_Pareto (sheet "Equipment_Pareto", 11 rows)
+    not needed: Category_Map
+- February_26_Utilities_Tracking.xlsx
+    used    Fact_Utilities_Monthly (sheet "Utility Analysis February 2026", 28 days)
+    used    Fact_Utilities_Weekly (sheet "Utility Analysis February 2026", 28 days)
+    not needed: Entries February 2026, Steam Mass Flow , Fuel , Water , Elec.February 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- GBL_3Year_Downtime_Model.xlsx
+    used    Fact_Downtime_3Yr (sheet "Fact_Downtime_3Yr", 792 rows)
+    used    Dim_Category (sheet "Dim_Category", 22 rows)
+    not needed: Dim_Year, Dim_MonthYear
+- GBL_DailyBottling_Model.xlsx
+    used    Fact_Bottling (sheet "Fact_Bottling", 300 rows)
+    not needed: Dim_Product
+- GBL_Downtime_Dashboard.xlsx
+    used    Fact_Downtime (sheet "Fact_Downtime", 153 rows)
+    older   Dim_Category (sheet "Dim_Category", 22 rows)
+    used    Daily_2Week (sheet "Daily_2Week", 148 rows)
+    used    Pareto_2Week (sheet "Pareto_2Week", 154 rows)
+    not needed: Dim_Month
+- GBL_Efficiency_Model.xlsx
+    used    Fact_Efficiency (sheet "Fact_Efficiency", 586 rows)
+    not needed: Dim_Product, Dim_MonthYear
+- GBL_Failure_Modes.xlsx
+    used    Failure_Modes (sheet "Failure_Modes", 135 rows)
+- January_26_Utilities_Tracking.xlsx
+    used    Fact_Utilities_Monthly (sheet "Utility Analysis January 2026", 31 days)
+    used    Fact_Utilities_Weekly (sheet "Utility Analysis January 2026", 31 days)
+    not needed: Entries January 2026, Steam Mass Flow , Fuel , Water , Elec.January 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- July_26_Utilities_Tracking.xlsx
+    used    Fact_Utilities_Monthly (sheet "Utility Analysis July 2026", 31 days)
+    used    Fact_Utilities_Weekly (sheet "Utility Analysis July 2026", 31 days)
+    not needed: Entries July 2026, Steam Mass Flow , Fuel , Water , Elec.July 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- June_26_Utilities_Tracking.xlsx
+    used    Fact_Utilities_Monthly (sheet "Utility Analysis June 2026", 30 days)
+    used    Fact_Utilities_Weekly (sheet "Utility Analysis June 2026", 30 days)
+    not needed: Entries June 2026, Steam Mass Flow , Fuel , Water , Elec.June 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- March_26_Utilities_Tracking.xlsx
+    used    Fact_Utilities_Monthly (sheet "Utility Analysis March 2026", 31 days)
+    used    Fact_Utilities_Weekly (sheet "Utility Analysis March 2026", 31 days)
+    not needed: Entries March 2026, Steam Mass Flow , Fuel , Water , Elec.March 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- May_26_Utilities_Tracking.xlsx
+    used    Fact_Utilities_Monthly (sheet "Utility Analysis May 2026", 31 days)
+    used    Fact_Utilities_Weekly (sheet "Utility Analysis May 2026", 31 days)
+    not needed: Entries May 2026, Steam Mass Flow , Fuel , Water , Elec.May 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- September_26_Utilities_Tracking.xlsx
+    used    Fact_Utilities_Monthly (sheet "Utility Analysis September 2026", 29 days)
+    used    Fact_Utilities_Weekly (sheet "Utility Analysis September 2026", 29 days)
+    not needed: Entries September 2026, Sheet2, Steam Mass Flow , Fuel , Water , Elec.SEPTEMBER 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
