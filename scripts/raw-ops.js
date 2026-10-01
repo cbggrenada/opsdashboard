@@ -96,7 +96,10 @@ function parseDailyBottling(wb, file, family) {
       const row = s[r]; if (!row) continue;
       const prod = txt(row[C.prod]);
       if (/budget|^total/i.test(prod)) break;               // end of the month's runs
-      const d = iso(row[C.date]); if (d) last = d;
+      let d = iso(row[C.date]);
+      // the sheet decides the year: a date typed with the wrong year (9 Apr 2005 on April_26) still belongs to this sheet
+      if (d && +d.slice(5, 7) === m && +d.slice(0, 4) !== year) d = year + d.slice(4);
+      if (d) last = d;
       if (!prod || /^[\d\s.]+$/.test(prod) || !last) continue; // skip the history block below the month
       const cases = num(row[C.cases]); if (!(cases > 0)) continue;
       if (+last.slice(0, 4) !== year || +last.slice(5, 7) !== m) continue;
