@@ -1,0 +1,72 @@
+name: Update dashboard
+
+# Runs whenever files are pushed (for example a new copy of a workbook in data/raw),
+# and can also be started by hand from the Actions tab.
+on:
+  push:
+    branches: [main, master]
+    paths-ignore:
+      - 'data/ops-data.json'
+      - 'data/ops-data.js'
+      - 'data/build-report.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: dashboard
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history, so the build knows which upload is newest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Excel reader
+        run: npm ci --no-audit --no-fund
+
+      - name: Read the workbooks and build the dashboard data
+        run: node scripts/build-data.js
+
+      - name: Save the data file in the repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html data/ops-data.json data/ops-data.js data/build-report.txt
+          if git diff --cached --quiet; then
+            echo "Data unchanged"
+          else
+            git commit -m "Update dashboard data"
+            # if new files were uploaded while this ran, catch up and try again
+            for i in 1 2 3; do
+              git pull --rebase -X theirs origin "${GITHUB_REF_NAME}" && git push && break
+              sleep 5
+            done
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  # Publishes when Settings > Pages > Source is "GitHub Actions" (recommended:
+  # the website then carries only the dashboard, never the raw workbooks).
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
