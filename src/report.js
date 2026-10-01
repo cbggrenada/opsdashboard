@@ -138,7 +138,7 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>render(
 /* ================= start ================= */
 (async()=>{
   await loadData();
-  const id=location.hash.slice(1);CUR=PAGES.find(p=>p.id===id)||PAGES[0];
+  const id=location.hash.slice(1);CUR=PAGES.find(p=>p.id===id)||pageList(SECTIONS[0].id)[0];
   if(window.Chart){Chart.defaults.font.family='-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif'}
   render();
 })();

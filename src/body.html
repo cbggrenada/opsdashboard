@@ -116,7 +116,7 @@ function makeCtx(p){
 const slicerSummary=(p,s)=>{const v=selOf(p,s),o=s.options();if(!v.length)return 'All';const lab=x=>(o.find(q=>q.v===x)||{l:String(x)}).l;return v.length<=2?v.map(lab).join(', '):v.length+' selected'};
 
 /* ================= page registry ================= */
-const SECTIONS=[{id:'brew',name:'Brewing'},{id:'sc',name:'Supply Chain Rundown'},{id:'kpi',name:'KPI Scorecard'}];
+const SECTIONS=[{id:'kpi',name:'KPI Scorecard'},{id:'sc',name:'Supply Chain Rundown'},{id:'brew',name:'Brewing'}];
 const PAGES=[];
 const page=o=>PAGES.push(o);
 let CUR=null;
