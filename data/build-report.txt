@@ -1,9 +1,11 @@
 
-Built 2026-10-01T15:33:46.646Z from 26 file(s). Latest data: 2026-10-01
+Built 2026-10-01T15:36:20.881Z from 30 file(s). Latest data: 2026-10-01
 - April_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis April 2026", 30 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis April 2026", 30 days)
     not needed: Entries April 2026, Steam Mass Flow , Fuel , Water , Elec.April 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- August'26 Daily Process Report 2026.xlsx
+    not needed: Dec 18th, Aug 2nd, Aug 3rd , Aug 4th, Aug 5th, Aug 6th, Aug 7th, Aug 12th, Aug 13th , Aug 14th&15th, Aug 17th , Aug 18th, Aug 19th , Aug 20th , Aug 21st-22nd, Aug 24th, Aug 25th , Aug 26th, Aug 27th , Aug 28th , Aug 31st, MTD_Links, YTD_Links, KPIs, Brewer Performance
 - August_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis August 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis August 2026", 31 days)
@@ -72,10 +74,14 @@ Built 2026-10-01T15:33:46.646Z from 26 file(s). Latest data: 2026-10-01
     used    Fact_Utilities_Monthly (sheet "Utility Analysis January 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis January 2026", 31 days)
     not needed: Entries January 2026, Steam Mass Flow , Fuel , Water , Elec.January 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- July'26 Daily Process Report 2026.xlsx
+    not needed: Dec 18th, July 1st, July 2nd, July 3rd, July 6th, July 7th, July 8th, July 9th, July 10th-12th, July 13th, July 14th , July 15th , July 16th, July 17th-19th, July20th , July21st, July22nd, July23rd, July24th, July27th, July28th , July29th, July30th, July31st, MTD_Links, YTD_Links, KPIs, Brewer Performance
 - July_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis July 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis July 2026", 31 days)
     not needed: Entries July 2026, Steam Mass Flow , Fuel , Water , Elec.July 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- June'26 Daily Process Report 2026.xlsx
+    not needed: Dec 18th, June 2nd, June 3rd, June 4th, June 5th, June 8th, June 9th, June 12th , June 15th , June 16th, June 17th , June 18th , June 21st, June 22nd, June 23rd, June 24th, June 25th , June 26th , June 27th-28th, June 29th, June 30th, MTD_Links, YTD_Links, KPIs, Brewer Performance
 - June_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis June 2026", 30 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis June 2026", 30 days)
@@ -88,6 +94,8 @@ Built 2026-10-01T15:33:46.646Z from 26 file(s). Latest data: 2026-10-01
     used    Fact_Utilities_Monthly (sheet "Utility Analysis May 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis May 2026", 31 days)
     not needed: Entries May 2026, Steam Mass Flow , Fuel , Water , Elec.May 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
+- September'26 Daily Process Report 2026.xlsx
+    not needed: Dec 18th, Sept 1st, Sept 2nd, Sept 3rd, Sept 4th, Sept 7th, Sept 8th, Sept 9th, Sept 10th, Sept 11th , Sept 14th, Sept 15th, Sept 16th, Sept 17th , Sept 18th, Sept 21st, Sept 22nd, Sept 23rd , Sept 24th, Sept 25th , Sept 28th, Sept 29th, Sept 30th, MTD_Links, YTD_Links, KPIs, Brewer Performance
 - September_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis September 2026", 29 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis September 2026", 29 days)
