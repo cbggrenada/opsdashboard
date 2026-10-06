@@ -136,7 +136,21 @@ const KPI_INFO = { // deck label -> scorecard name, department, sort, Production
   totalbottlingloss: ['Total Bottling Loss %', 'Packaging', 10, 'Total Bottling Loss', '%', 'Lower'], productioncases: ['Production cases', 'Packaging', 14, 'Production Cases', 'cases', 'Higher'],
   plantavailability: ['Plant Availability', 'Engineering', 15, 'Plant Availability', '%', 'Higher'], maintenancecompliance: ['Maintenance Compliance', 'Engineering', 16, 'Maintenance Compliance', '%', 'Higher'],
   ftr: ['FTR %', 'Quality', 17, 'FTR', '%', 'Higher'],
+  // scorecard lines with no Production KPIs card
+  oeeutilization: ['OEE Utilization %', 'Packaging', 9, null, '%', 'Higher'], bottlingefficiency: ['Bottling Efficiency', 'Packaging', 11, null, '%', 'Higher'],
+  caseperhr: ['Case Per Hr.', 'Packaging', 12, null, 'cases', 'Higher'], productioncasesperhour: ['Case Per Hr.', 'Packaging', 12, null, 'cases', 'Higher'],
+  bottlingutilization: ['Bottling Utilization', 'Packaging', 13, null, '%', 'Higher'],
 };
+// Ops KPIs MD report rows (read by raw-parsers.parseMdReport) -> the same records as the SCTCM scorecard slide
+function fromMdReport(md) {
+  const out = [];
+  for (const r of md) {
+    const key = r.label.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const info = KPI_INFO[key] || KPI_INFO[key.replace(/^productioncasesperh.*/, 'productioncasesperhour')]; if (!info) continue;
+    out.push({ info, y: r.y, m: r.m, mtd: r.mtd, ytd: r.ytd });
+  }
+  return out;
+}
 const DEPTS = /^(utilities|brewing|packaging|engineering|quality|department)$/i;
 const deckNum = s => { const neg = /^\(.*\)$/.test(s.trim()); const v = num(s.replace(/[()]/g, '')); return v == null ? null : neg ? -v : v; };
 function parseSctcm(buf, file) {
@@ -163,4 +177,4 @@ function parseSctcm(buf, file) {
   return out;
 }
 
-module.exports = { isLineDowntime, parseLineDowntime, isDailyBottling, parseDailyBottling, parseSctcm, KPI_INFO };
+module.exports = { isLineDowntime, parseLineDowntime, isDailyBottling, parseDailyBottling, parseSctcm, fromMdReport, KPI_INFO };

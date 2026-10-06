@@ -28,6 +28,7 @@ function readSheet(ws,maxR=600,maxC=160){
 }
 function detectType(wb,fname=''){
   const names=wb.SheetNames;
+  if(names.some(n=>mdHeader(readSheet(wb.Sheets[n],15,40))))return 'md';
   for(const n of names.slice(0,24)){const a=readSheet(wb.Sheets[n],40,30);if(a.some(r=>r&&r.some(c=>/%\s*completion/i.test(txt(c))))&&a.some(r=>r&&r.some(c=>/pm'?s\s*planned|^equipment$/i.test(txt(c)))))return 'pm'}
   if(names.some(n=>/^mtd$/i.test(n.trim()))){const a=readSheet(wb.Sheets[names.find(n=>/^mtd$/i.test(n.trim()))],20,10);if(a.some(r=>r&&r.some(c=>/^fv hls$/i.test(txt(c)))))return 'procvol'}
   if(names.some(n=>/^summary$/i.test(n.trim()))&&(/oee/i.test(fname)||names.some(n=>/utili[sz]ation/i.test(n))))return 'oee';
@@ -38,6 +39,7 @@ function detectType(wb,fname=''){
   return 'generic';
 }
 // Gross Efficiency workbook: one sheet per month, one row per product run
+const KEG_CASES=2.75;   // cases per keg
 function parseGross(wb){
   const out={};
   for(const n of wb.SheetNames){
@@ -52,7 +54,8 @@ function parseGross(wb){
       else if(C.fill==null&&/^FILL/.test(c))C.fill=i;
       else if(C.cases==null&&/^CASES( BOTTLED)?$/.test(c))C.cases=i;
       else if(C.bbt==null&&/^BBT/.test(c))C.bbt=i;
-      else if(C.bottled==null&&/^BOTTLED HLS/.test(c))C.bottled=i;}
+      else if(C.bottled==null&&/^BOTTLED HLS/.test(c))C.bottled=i;
+      else if(C.kegs==null&&/^KEGS$/.test(c))C.kegs=i;}
     // some months leave the "AVAIL." heading blank: it is the TIME column just before FILL
     if(C.avail==null&&C.fill>0&&/^TIME$/.test(comb(C.fill-1)))C.avail=C.fill-1;
     if(C.date==null||C.cases==null)continue;
@@ -62,12 +65,15 @@ function parseGross(wb){
       // keep rows for the sheet's own month; fix a mistyped year (e.g. 2005 typed for 2026)
       if(sm!=null&&+ds.slice(5,7)-1!==sm)continue;
       if(sy!=null&&+ds.slice(0,4)!==sy){const fx=parseDate(`${sy}-${ds.slice(5)}`);if(!fx)continue;ds=fx}
-      const rec=out[ds]||(out[ds]={cases:0,availMin:0,fillMin:0,bbtHl:0,bottledHl:0});
+      const rec=out[ds]||(out[ds]={cases:0,availMin:0,fillMin:0,bbtHl:0,bottledHl:0,kegs:0});
       const add=(k,c)=>{if(c==null)return;const v=num(row[c]);if(v!=null)rec[k]+=v};
-      add('cases',C.cases);add('availMin',C.avail);add('fillMin',C.fill);add('bbtHl',C.bbt);add('bottledHl',C.bottled);
+      add('cases',C.cases);add('availMin',C.avail);add('fillMin',C.fill);add('bbtHl',C.bbt);add('bottledHl',C.bottled);add('kegs',C.kegs);
     }
   }
-  for(const ds in out){const r=out[ds];for(const k in r)r[k]=+r[k].toFixed(4);if(!Object.values(r).some(v=>v))delete out[ds]}
+  // kegs count towards production cases: 1 keg = 2.75 cases (the conversion the Gross Efficiency sheets use for "KEGS - TOTAL CASES")
+  for(const ds in out){const r=out[ds];for(const k in r)r[k]=+r[k].toFixed(4);
+    if(r.kegs)r.kegCases=+(r.kegs*KEG_CASES).toFixed(2);else delete r.kegs;
+    if(!Object.values(r).some(v=>v))delete out[ds]}
   return {rows:out,targets:{}};
 }
 // Utilities Tracking workbook: "Utility Analysis <Month> <Year>" has one row per day of the month
@@ -279,6 +285,7 @@ function parsePM(wb,fname){
 }
 function parseKnown(wb,fname){
   const t=detectType(wb,fname);
+  if(t==='md')return {type:'Ops KPIs MD report',rows:{},targets:{},md:parseMdReport(wb,fname)};
   if(t==='pm')return {type:'PM compliance',...parsePM(wb,fname)};
   if(t==='procvol')return {type:'Monthly process loss (volume)',...parseProcVol(wb,fname)};
   if(t==='oee')return {type:'OEE summary',...parseOEE(wb,fname)};
@@ -287,6 +294,40 @@ function parseKnown(wb,fname){
   if(t==='util')return {type:'Utilities Tracking',...parseUtil(wb,fname)};
   if(t==='process')return {type:'Daily Process Report',...parseProcess(wb,fname)};
   return null;
+}
+
+/* ---- Ops KPIs MD report (one sheet per month: "Monthly Operating Report", Month to Date and Year to Date,
+        each with Actual / Budget / LY for every KPI) ---- */
+function mdHeader(a){
+  const top=a.slice(0,10).map(r=>(r||[]).map(txt).join('|').toLowerCase());
+  if(!top.some(t=>t.includes('month to date'))||!top.some(t=>t.includes('year to date')))return null;
+  const h=a.findIndex((r,i)=>i<12&&r&&r.some(c=>/^kpi$/i.test(txt(c)))&&r.filter(c=>/^actual$/i.test(txt(c))).length>=2);
+  return h<0?null:h;
+}
+function parseMdReport(wb,fname){
+  const out=[];
+  for(const n of wb.SheetNames){
+    const a=readSheet(wb.Sheets[n],80,40);const h=mdHeader(a);if(h==null)continue;
+    const H=a[h].map(txt),kc=H.findIndex(c=>/^kpi$/i.test(c));
+    const act=H.map((c,i)=>/^actual$/i.test(c)?i:-1).filter(i=>i>=0);
+    const after=(i,re)=>{for(let j=i+1;j<i+5;j++)if(re.test(H[j]||''))return j;return -1};
+    const cols=act.slice(0,2).map(i=>({a:i,b:after(i,/^budget$/i),ly:after(i,/^ly$/i)}));
+    // the month: title line (e.g. "September 2026"), else the sheet name (e.g. "New MD September 26")
+    let mo=null,yr=null;
+    for(let r=0;r<h&&mo==null;r++)for(const c of (a[r]||[])){const t=txt(c);if(/^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.? ?(20\d\d)$/i.test(t)){mo=monthFromText(t);yr=yearFromText(t);break}}
+    if(mo==null){mo=monthFromText(n);const y2=n.match(/(\d{2,4})\s*$/);yr=y2?(y2[1].length===2?2000+ +y2[1]:+y2[1]):yearFromText(fname)}
+    if(mo==null||yr==null)continue;
+    for(let r=h+1;r<a.length;r++){
+      const row=a[r]||[];const label=txt(row[kc]);if(!label)continue;
+      const v=c=>c<0?null:num(row[c]);
+      const [m,y]=cols;if(!m)continue;
+      const rec={y:yr,m:mo+1,label,mtd:{a:v(m.a),b:v(m.b),ly:v(m.ly)},ytd:y?{a:v(y.a),b:v(y.b),ly:v(y.ly)}:{a:null,b:null,ly:null}};
+      if(rec.mtd.a==null&&rec.ytd.a==null)continue;
+      out.push(rec);
+    }
+  }
+  if(!out.length)throw new Error('Could not find the Month to Date / Year to Date KPI table on any sheet.');
+  return out;
 }
 
 /* ---- generic files (e.g. a PM tracker): column matching ---- */
@@ -330,4 +371,4 @@ function buildGeneric(sh){
   return out;
 }
 
-module.exports={XLSX,detectType,parseKnown,analyzeSheet,buildGeneric,parseDate};
+module.exports={XLSX,detectType,parseKnown,analyzeSheet,buildGeneric,parseDate,parseMdReport};

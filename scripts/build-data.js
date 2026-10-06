@@ -284,6 +284,7 @@ function productFamily(raw) {
 }
 const rtxt = v => (v == null ? '' : v instanceof Date ? v.toISOString() : String(v)).trim();
 // run-level reader for Gross_Efficiency: every production run with its product
+const KEG_CASES = 2.75;   // cases per keg
 function grossRuns(wb) {
   const out = [];
   for (const n of wb.SheetNames) {
@@ -304,6 +305,7 @@ function grossRuns(wb) {
       else if (C.bbt == null && /^BBT/.test(c)) C.bbt = i;
       else if (C.btl == null && /^BOTTLED HLS/.test(c)) C.btl = i;
       else if (C.rej == null && /^REJECTS/.test(c)) C.rej = i;
+      else if (C.kegs == null && /^KEGS$/.test(c)) C.kegs = i;
     }
     if (C.avail == null && C.fill > 0 && /^TIME$/.test(comb(C.fill - 1))) C.avail = C.fill - 1;
     if (C.date == null || C.cases == null || C.prod == null) continue;
@@ -315,7 +317,7 @@ function grossRuns(wb) {
       if (sy && +ds.slice(0, 4) !== sy) ds = `${sy}-${ds.slice(5)}`;     // fix a mistyped year
       const g = k => (C[k] == null ? null : parseNum(row[C[k]]));
       const prod = parseText(row[C.prod]); if (!prod) continue;
-      out.push({ ds, prod, avail: g('avail'), fill: g('fill'), cases: g('cases'), eff: g('eff'), bbt: g('bbt'), btl: g('btl'), rej: g('rej') });
+      out.push({ ds, prod, avail: g('avail'), fill: g('fill'), cases: g('cases'), eff: g('eff'), bbt: g('bbt'), btl: g('btl'), rej: g('rej'), kegs: g('kegs') });
     }
   }
   return out;
@@ -362,6 +364,11 @@ for (const f of files) {
         src.raw = `Daily bottling summary, ${res.length} runs`; continue;
       }
       const type = RP.detectType(wbd, f);
+      if (type === 'md') {   // Ops KPIs MD report: the official scorecard for each month it covers
+        const res = RO.fromMdReport(RP.parseMdReport(wbd, f));
+        opsFiles.push({ file: f, time: src.time, kind: 'md', res });
+        src.raw = `Ops KPIs MD report, ${[...new Set(res.map(r => MON[r.m - 1].toUpperCase().slice(0, 1) + MON[r.m - 1].slice(1) + ' ' + r.y))].join(', ')}`; continue;
+      }
       if (RAW_TYPES.has(type)) {
         const res = RP.parseKnown(wbd, f);
         const runs = type === 'gross' ? grossRuns(wbd) : null;
@@ -485,10 +492,14 @@ const useRaw = (t, f) => (rawUsed[t] = rawUsed[t] || new Set()).add(f);
         if (Actual != null) rows.push({ KPI, Unit, Period, Actual: Unit === 'cases' ? Actual : r1(Actual), Budget: Budget == null ? null : (Unit === 'cases' ? Budget : r1(Budget)), 'Last Year': null, 'Better Direction': dir, Year: y, MonthNum: m, Month: M3(m), _y: y, _m: m, _raw: 1 });
       for (const f of files.filter(Boolean)) useRaw('Production_KPIs', f);
     };
-    add('Production Cases', 'cases', 'Higher', sumRuns([id], 'cases'), sumRuns(ytd, 'cases'), ut(id, 'cases'), caseBud(ytd), [gross[id] && gross[id].file]);
+    // PM compliance year to date: average of the monthly figures from January (as the SCTCM reports do), across all PM files
+    const pmYtd = ids => { const v = ids.map(i => kv(pm, i, 'pmMtd')).filter(x => x != null); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
+    // production cases = cases bottled + kegs at 2.75 cases per keg (as the Gross Efficiency sheets and SCTCM reports count them)
+    const prodCases = ids => { const c = sumRuns(ids, 'cases'), k = sumRuns(ids, 'kegs'); return c == null ? null : Math.round(c + (k || 0) * KEG_CASES); };
+    add('Production Cases', 'cases', 'Higher', prodCases([id]), prodCases(ytd), ut(id, 'cases'), caseBud(ytd), [gross[id] && gross[id].file]);
     add('OEE', '%', 'Higher', kv(oee, id, 'oeeMtd'), kv(oee, id, 'oeeYtd'), kt(oee, id, 'oee') ?? ut(id, 'oee'), undefined, [oee[id] && oee[id].file]);
     add('FTR', '%', 'Higher', kv(ftr, id, 'ftrMtd'), kv(ftr, id, 'ftrYtd'), kt(ftr, id, 'ftr') ?? ut(id, 'ftr'), undefined, [ftr[id] && ftr[id].file]);
-    add('Maintenance Compliance', '%', 'Higher', kv(pm, id, 'pmMtd'), kv(pm, id, 'pmYtd'), kt(pm, id, 'pm') ?? 70, undefined, [pm[id] && pm[id].file]);
+    add('Maintenance Compliance', '%', 'Higher', kv(pm, id, 'pmMtd'), pmYtd(ytd), kt(pm, id, 'pm') ?? 70, undefined, [pm[id] && pm[id].file]);
     add('Extract Recovery', '%', 'Higher', lastOf(id, 'bwMtd'), lastOf(id, 'bwYtd'), lastOf(id, 'bwTgt'), undefined, [proc[id] && proc[id].file]);
     add('Brews Per Day', 'brews', 'Higher', lastOf(id, 'bpdMtd'), lastOf(id, 'bpdYtd'), lastOf(id, 'bpdTgt'), undefined, [proc[id] && proc[id].file]);
     add('Total Bottling Loss', '%', 'Lower', loss([id]), loss(ytd), null, undefined, [gross[id] && gross[id].file]);
@@ -520,7 +531,8 @@ for (const kind of ['downtime', 'bottling']) {
 const deckTables = {};
 {
   const pick = {};
-  for (const o of opsFiles.filter(x => x.kind === 'sctcm').sort((a, b) => b.time - a.time)) for (const r of o.res) { const k = r.y * 100 + r.m; if (!pick[k]) pick[k] = o; if (pick[k] === o) (o.use = o.use || []).push(r); }
+  // the Ops KPIs MD report (the corrected figures) wins over an SCTCM deck for the same month; otherwise the newest upload
+  for (const o of opsFiles.filter(x => x.kind === 'sctcm' || x.kind === 'md').sort((a, b) => (b.kind === 'md') - (a.kind === 'md') || b.time - a.time)) for (const r of o.res) { const k = r.y * 100 + r.m; if (!pick[k]) pick[k] = o; if (pick[k] === o) (o.use = o.use || []).push(r); }
   const add = (t, row, f) => { (deckTables[t] = deckTables[t] || []).push(row); (rawUsed[t] = rawUsed[t] || new Set()).add(f); };
   for (const o of Object.values(pick).filter((v, i, a) => a.indexOf(v) === i)) fromScorecard(o.use, (t, row) => add(t, row, o.file), true);
 }
@@ -533,7 +545,9 @@ if (rawTables.Production_KPIs) {
     const k = `${r._y}-${r._m}-${r.KPI}`; const o = recs[k] = recs[k] || { info: i, y: r._y, m: r._m, mtd: {}, ytd: {} };
     o[r.Period === 'MTD' ? 'mtd' : 'ytd'] = { a: r.Actual, b: r.Budget, ly: r['Last Year'] };
   }
-  const full = new Set(Object.values(recs).filter(o => o.info[3] === 'Production Cases' && o.mtd.a != null).map(o => o.y * 100 + o.m)); // complete months only
+  const now = new Date(), thisMonth = now.getFullYear() * 100 + now.getMonth() + 1;
+  // complete months only: production figures in, and not the month still in progress
+  const full = new Set(Object.values(recs).filter(o => o.info[3] === 'Production Cases' && o.mtd.a != null && o.y * 100 + o.m < thisMonth).map(o => o.y * 100 + o.m));
   fromScorecard(Object.values(recs).filter(o => o.mtd.a != null && full.has(o.y * 100 + o.m)), (t, row) => (fillTables[t] = fillTables[t] || []).push(row), false);
 }
 function fromScorecard(list, add, withKpis) {
@@ -544,7 +558,7 @@ function fromScorecard(list, add, withKpis) {
       for (const r of rs) {
         const [sc, dept, sort, pk, unit, dir] = r.info;
         add('Scorecard_Monthly', { MonthNum: m, Month: mon, SortKey: sk, Department: dept, KPI: sc, 'KPI Sort': sort, Actual: r.mtd.a, 'Prior Year': r.mtd.ly ?? null, YTD: r.ytd.a ?? null, Budget: r.mtd.b ?? null, _y: y, _m: m, ...(withKpis ? {} : { _calc: 1 }) });
-        if (withKpis) for (const [Period, v] of [['MTD', r.mtd], ['YTD', r.ytd]])
+        if (withKpis && pk) for (const [Period, v] of [['MTD', r.mtd], ['YTD', r.ytd]])
           add('Production_KPIs', { KPI: pk, Unit: unit, Period, Actual: v.a, Budget: v.b, 'Last Year': v.ly, 'Better Direction': dir, Year: y, MonthNum: m, Month: mon, _y: y, _m: m, _raw: 1, _deck: 1 });
       }
       const er = get('Extract Recovery'), pl = get('Process Loss Vol.'), bl = get('Total Bottling Loss');
@@ -560,10 +574,10 @@ function fromScorecard(list, add, withKpis) {
 }
 for (const [t, rows] of Object.entries(rawTables)) (candidates[t] = candidates[t] || []).push({ file: '(raw)', files: [...(rawUsed[t] || [])], time: TOP - 1, rows, raw: true });
 for (const [t, rows] of Object.entries(deckTables)) (candidates[t] = candidates[t] || []).push({ file: '(deck)', files: [...(rawUsed[t] || [])], time: TOP, rows, raw: true });
-const deckNames = new Set(opsFiles.filter(o => o.kind === 'sctcm').map(o => o.file));
+const deckNames = new Set(opsFiles.filter(o => o.kind === 'sctcm' || o.kind === 'md').map(o => o.file));
 const fillFiles = [...(rawUsed.Production_KPIs || [])].filter(f => !deckNames.has(f));
 for (const [t, rows] of Object.entries(fillTables)) { (candidates[t] = candidates[t] || []).push({ file: '(worked out)', files: fillFiles, time: -1, rows, fill: true }); for (const f of fillFiles) (rawUsed[t] = rawUsed[t] || new Set()).add(f); }
-const OPS_LABEL = { downtime: 'Line downtime log', bottling: 'Daily bottling summary', sctcm: 'SCTCM report' };
+const OPS_LABEL = { downtime: 'Line downtime log', bottling: 'Daily bottling summary', sctcm: 'SCTCM report', md: 'Ops KPIs MD report' };
 for (const r of [...rawFiles, ...opsFiles]) for (const [t, fs_] of Object.entries(rawUsed)) if (fs_.has(r.file)) { const s = sources.find(x => x.file === r.file); if (s && !s.tables.some(x => x.name === t)) s.tables.push({ name: t, sheet: RAW_LABEL[r.type] || OPS_LABEL[r.kind], rows: 'raw' }); }
 
 // ---------- combine: newest file wins for a year, different years are added together ----------
