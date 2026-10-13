@@ -60,7 +60,9 @@ const BUCKETS=['Breakdowns','Changeover Variation','Quality','Logistics','Utilit
 page({sec:'sc',id:'downtime-glance',title:'Downtime at a glance',sub:'for plan attainment',tab:'Downtime at a glance',tables:['YTD_Summary','Daily_2Week','Equipment_Pareto'],
   slicers:[fieldSlicer('line','Line','YTD_Summary','Line'),monthSlicer(['YTD_Summary','Daily_2Week'])],
   build(c){
-    const Y=c.rows('YTD_Summary'),D=c.rows('Daily_2Week'),EP=c.all('Equipment_Pareto');
+    const Y=c.rows('YTD_Summary'),D=c.rows('Daily_2Week'),EP0=c.all('Equipment_Pareto');
+    // equipment Pareto is a year-to-date table: show the latest year in the selection
+    const epY=Math.max(...(Y.length?Y:EP0).map(r=>r._y).filter(isNum)),EP=EP0.filter(r=>r._y==null||r._y===epY);
     const b=k=>sum(Y.filter(r=>r.Bucket===k),'Hours');
     const tot=sum(D,'DowntimeHours');
     const cards=[card('Total downtime',tot,{fmt:F.n1,unit:'h',foot:'All stoppages, daily log'})];
@@ -72,7 +74,7 @@ page({sec:'sc',id:'downtime-glance',title:'Downtime at a glance',sub:'for plan a
     const ptot={m:'Total',line:''};BUCKETS.forEach(b=>ptot[b]=sum(Y.filter(r=>r.Bucket===b),'Hours'));ptot.tot=sum(Y,'Hours');
     return [row(cards),
       chart('Downtime distribution by category',{kind:'donut',labels:donut.labels,sets:[{data:donut.data}],fmt:F.h1}),
-      chart('Equipment downtime and cumulative %',{kind:'bar',hint:'Pareto of breakdown hours by equipment, year to date (not affected by the filters)',labels:EP.map(r=>r.Equipment),
+      chart('Equipment downtime and cumulative %',{kind:'bar',hint:`Pareto of breakdown hours by equipment, year to date${isFinite(epY)?' '+epY:''} (not affected by the month filter)`,labels:EP.map(r=>r.Equipment),
         sets:[{label:'Hours',data:EP.map(r=>r.Hours)},{label:'Cumulative %',data:EP.map(r=>r['Cumulative %']),type:'line',axis:'y2',color:PAL[1]}],fmt:F.n1,fmt2:F.p0,y2Max:100,empty:noData('Equipment_Pareto')}),
       lines.length>1?chart('Downtime by category and line',{span:12,kind:'bar',labels:BUCKETS,sets:lines.map((l,i)=>({label:l,data:BUCKETS.map(k=>sum(Y.filter(r=>r.Line===l&&r.Bucket===k),'Hours'))})),fmt:F.n1}):
         (x=>chart('Downtime by category and month',{span:12,kind:'stack',hint:'Hours',labels:x.labels,sets:BUCKETS.map(b=>({label:b,data:x.keys.map(k=>sum(Y.filter(r=>ymKey(r)===k&&r.Bucket===b),'Hours'))})),fmt:F.n0}))(byMonth(Y,rs=>rs)),

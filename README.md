@@ -8,6 +8,8 @@ One website that replaces three Power BI reports:
 | Supply Chain Rundown | CBG_Supply_Chain_Rundown_2026.pbix | Downtime at a glance, Downtime analytics, 3-year downtime, Failure modes, Production efficiency, Packaging loss, Packaging by shift, 3-year packaging loss, Daily bottling, Cost vs performance, Production KPIs, 3-year brewing loss |
 | KPI Scorecard | KPI_Model.pbix | Scorecard, KPI trends, Production and loss, Utilities monthly, Utilities weekly, Quality and complaints, Cost, Forecast, Cases produced, Actual vs budget |
 
+KPIs are marked **On target** (meets or beats budget), **Near target** (misses it by 5% of the budget or less) or **Off target**. On the Scorecard, **Show** picks one of those groups and **Order → By status** lists them in that order.
+
 Every page has filters (tick one or several months, years, brands and so on), and **Generate report** builds a printable report from any pages you pick.
 
 ## Updating the figures
@@ -19,6 +21,7 @@ Every page has filters (tick one or several months, years, brands and so on), an
 Notes:
 - Uploading a file with the same name replaces the old copy. A copy with a different name also works: for the same year, the most recently uploaded file wins.
 - A workbook for a new year (for example `CBG_KPI_Monthly_2027.xlsx`) is added alongside the 2026 one, so the year filters show both.
+- **Earlier years (2025):** upload them whenever you're ready, with the year in the file name (`Gross_Efficiency_2025.xlsx`, `GBL_Line_Downtime_2025.xlsx`, `Daily_Bottling_Summary_2025.xlsx`, `September_25_Utilities_Tracking.xlsx`, a 2025 Ops KPIs MD report …). Month filters then open on the latest year (pick 2025 months in the list), and the "Last year" figures fill in from the 2025 files.
 - Sheets are found by their name (for example `Scorecard_Monthly`). A renamed sheet is still found if its header row has all the usual columns.
 - Shift reports (`Average cases per hr-shift 2026(MAY).csv`, or the same layout in Excel) can be added month by month; they all appear on the **Packaging by shift** page.
 - Production efficiency, Packaging loss and Production KPIs are built from the raw workbooks (Gross Efficiency, Daily Process Reports, OEE, FTR, PM compliance, Utilities Tracking). Product names in Gross Efficiency are grouped into families with `scripts/product-map.json`; a new spelling is shown under its own name and listed in `data/build-report.txt` so it can be added there.
@@ -27,6 +30,17 @@ Notes:
 - The monthly **SCTCM report** (`CBG - SCTCM report [Month] 2026 (Supply chain).pptx`) is read from its KPI scorecard slide. Each report replaces that one month on the Scorecard, KPI trends, Production and loss, Cases produced and Production KPIs pages, and gives plant availability and last-year figures. The charts in the report are pictures and cannot be read.
 - A month with no SCTCM report yet is worked out from the raw files (Gross Efficiency, Daily Process Report, Utilities Tracking, OEE, FTR, PM compliance) and marked as such on the Scorecard. Plant availability and the bottling detail KPIs only appear once that month's SCTCM report is uploaded.
 - Utilities come straight from the monthly **Utilities Tracking** workbooks (the same files the CBG dashboard uses). Upload each month's file; weeks are days 1–7, 8–14, 15–21, 22–28 and 29 to month end. `CBG_Utilities_Weekly_2026.xlsx` is no longer needed; if it is uploaded, the tracking workbooks still take priority.
+
+## Look and feel
+
+- Laid out like Profit Isle: a white top bar, an icon rail on the left for the three sections (KPI Scorecard, Supply Chain Rundown, Brewing; the arrow at the bottom shows their names), and a black band with the breadcrumb, page tabs and filters.
+- Dense tables with alternating grey rows and bold group rows; flat white cards and charts.
+- **Month picker:** one month at a time, or **YTD** for January to the latest month. To see several months or years side by side, use **Compare**.
+- **Light / dark** (moon / sun button). The chart library is built into `index.html`.
+
+## Admin page (upload from the website)
+
+Click the **padlock** at the top right, or open `<your site>/admin.html`. Sign in once per device with a GitHub fine-grained token for this repository (Contents and Actions: Read and write) and a passcode; afterwards only the passcode is needed. From there you can upload files (same name replaces, which is how daily files are updated), see what the build read from each file and when each file was uploaded and by whom, download, replace or delete files, start a rebuild and see the change history. GitHub stays the master copy.
 
 ## Which workbook feeds which page
 

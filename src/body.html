@@ -1,12 +1,13 @@
 <body>
 <header class="hdr">
   <nav class="nav" aria-label="Dashboard">
-    <div class="brand"><img class="logo" alt="Carib Brewery" src="%%LOGO%%"><span class="nt">Operations dashboard</span></div>
+    <div class="brand"><img class="logo" alt="Carib Brewery" src="%%LOGO%%"><span class="nt">Grenada<b>Operations</b></span></div>
     <div class="seg" id="secs" role="group" aria-label="Report"></div>
-    <button class="btn primary" id="rptBtn">Generate report</button>
+    <span class="navb"><a class="btn thbtn" id="adminBtn" href="admin.html" aria-label="Admin sign in" title="Admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></a><button class="btn thbtn" id="themeBtn" type="button" aria-label="Switch light or dark mode" title="Light / dark"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2 12h2.2M19.8 12H22M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg></button><button class="btn" id="cmpBtn">Compare</button><button class="btn primary" id="rptBtn">Generate report</button><span class="pi-me" title="Carib Brewery Grenada">CBG</span></span>
   </nav>
   <div class="tabs" id="tabs" role="tablist" aria-label="Pages"></div>
 </header>
+<button class="rail-tog" id="railTog" type="button" aria-label="Show section names"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
 <section class="hero">
   <svg class="hwave" viewBox="0 0 420 160" preserveAspectRatio="none" aria-hidden="true">
     <path d="M150 0 C 240 30, 330 80, 420 160 L420 0 Z" fill="currentColor" opacity=".07"/>
@@ -22,6 +23,7 @@
 </section>
 <main id="main"></main>
 <dialog id="dlg"></dialog>
+<dialog id="cmpDlg" class="cmpd" aria-label="Compare periods"></dialog>
 <div class="toast" id="toast" role="status"></div>
 <script>
 /* ================= basics ================= */
@@ -78,7 +80,9 @@ function monthSlicer(tables,opt={}){
   return {id:opt.id||'month',label:opt.label||'Month',kind:'multi',grouped:true,
     tables:Object.fromEntries(tables.map(t=>[t,ymKey])),
     options:()=>{const ks=uniq(tables.flatMap(t=>(T[t]||[]).map(ymKey)).filter(Boolean)).sort();return ks.map(k=>({v:k,l:ymLabel(k),g:k.slice(0,4)}))},
-    def:opt.def||null,latest:true};
+    // with more than one year of data, open on the latest year (pick other months, or a whole year, in the list)
+    def:opt.def||(()=>{const ks=uniq(tables.flatMap(t=>(T[t]||[]).map(ymKey)).filter(Boolean)).sort();const ys=uniq(ks.map(k=>k.slice(0,4)));
+      return ys.length>1?ks.filter(k=>k.startsWith(ys[ys.length-1])):[]}),latest:true};
 }
 function yearSlicer(tables,opt={}){
   return {id:'year',label:'Year',kind:'multi',tables:Object.fromEntries(tables.map(t=>[t,r=>r._y])),
@@ -113,7 +117,12 @@ function makeCtx(p){
   };
   return {p,sel,rows,all:n=>T[n]||[],one:id=>sel(id)[0]};
 }
-const slicerSummary=(p,s)=>{const v=selOf(p,s),o=s.options();if(!v.length)return 'All';const lab=x=>(o.find(q=>q.v===x)||{l:String(x)}).l;return v.length<=2?v.map(lab).join(', '):v.length+' selected'};
+// year to date for a month picker: January to the latest month of the year in view
+function ytdYear(p,s){const o=s.options();if(!o.length)return null;const v=selOf(p,s);return (v.length?[...v].sort().pop():o[o.length-1].v).slice(0,4)}
+function ytdSet(p,s){const y=ytdYear(p,s);return y?s.options().map(x=>x.v).filter(k=>k.slice(0,4)===y):[]}
+function isYtd(p,s){if(!s.latest)return false;const v=[...selOf(p,s)].sort(),y=ytdSet(p,s);return v.length>1&&v.length===y.length&&v.every((x,i)=>x===y[i])}
+const slicerSummary=(p,s)=>{const v=selOf(p,s),o=s.options();if(!v.length)return 'All';
+  if(isYtd(p,s)){const y=ytdSet(p,s);return `YTD ${y[0].slice(0,4)} (${ymLabel(y[0],true)}–${ymLabel(y[y.length-1],true)})`}const lab=x=>(o.find(q=>q.v===x)||{l:String(x)}).l;return v.length<=2?v.map(lab).join(', '):v.length+' selected'};
 
 /* ================= page registry ================= */
 const SECTIONS=[{id:'kpi',name:'KPI Scorecard'},{id:'sc',name:'Supply Chain Rundown'},{id:'brew',name:'Brewing'}];
@@ -128,7 +137,12 @@ const row=items=>({t:'row',items});
 const chart=(title,o)=>({t:'chart',title,...o});
 const table=(title,o)=>({t:'table',title,...o});
 const text=(title,lines,o={})=>({t:'text',title,lines,...o});
-function status(v,target,higherBetter=true){if(v==null||target==null)return null;return (higherBetter?v>=target:v<=target)?'good':'bad'}
+// target status: on target, near target (missing it by no more than NEAR_PCT % of the target) or off target
+const NEAR_PCT=5;
+const ST_LABEL={good:'On target',warn:'Near target',bad:'Off target'};
+function status(v,target,higherBetter=true){if(v==null||target==null)return null;if(higherBetter?v>=target:v<=target)return 'good';return Math.abs(v-target)/(Math.abs(target)||1)*100<=NEAR_PCT?'warn':'bad'}
+const stColor=s=>s==='bad'?'#C0392B':s==='warn'?'#E0A21B':'#01427A';
+const stPill=s=>s?`<span class="pill ${s==='good'?'g':s==='warn'?'a':'b'}">${ST_LABEL[s]}</span>`:'<span class="m">–</span>';
 function vsLine(parts){return parts.filter(Boolean).join(' · ')}
 function notesFor(...tables){return tables.flatMap(t=>(DATA&&DATA.notes&&DATA.notes[t])||[])}
 function noData(...tables){const miss=tables.filter(t=>!has(t));return miss.length?`No data yet. Upload the workbook that holds ${miss.join(', ')}.`:'No data for this selection.'}

@@ -285,7 +285,7 @@ function productFamily(raw) {
 const rtxt = v => (v == null ? '' : v instanceof Date ? v.toISOString() : String(v)).trim();
 // run-level reader for Gross_Efficiency: every production run with its product
 const KEG_CASES = 2.75;   // cases per keg
-function grossRuns(wb) {
+function grossRuns(wb, fname = '') {
   const out = [];
   for (const n of wb.SheetNames) {
     const ws = wb.Sheets[n]; if (!ws || !ws['!ref']) continue;
@@ -309,7 +309,7 @@ function grossRuns(wb) {
     }
     if (C.avail == null && C.fill > 0 && /^TIME$/.test(comb(C.fill - 1))) C.avail = C.fill - 1;
     if (C.date == null || C.cases == null || C.prod == null) continue;
-    const sm = monthFromText(n.trim().slice(0, 3)); const sy = yearInName(n.replace(/_206\b/, '_2026'));
+    const sm = monthFromText(n.trim().slice(0, 3)); const sy = yearInName(fname) || yearInName(n.replace(/_206\b/, '_2026'));   // the file's year (Gross_Efficiency_2025.xlsx) wins over a mistyped sheet name
     for (let r = h + 2; r < a.length; r++) {
       const row = a[r]; if (!row) continue;
       let ds = RP.parseDate(row[C.date]); if (!ds) continue;
@@ -371,7 +371,7 @@ for (const f of files) {
       }
       if (RAW_TYPES.has(type)) {
         const res = RP.parseKnown(wbd, f);
-        const runs = type === 'gross' ? grossRuns(wbd) : null;
+        const runs = type === 'gross' ? grossRuns(wbd, f) : null;
         rawFiles.push({ file: f, time: src.time, type, res, runs });
         if (type !== 'util') {
           const months = uniqArr([...Object.keys(res.rows || {}).map(d => d.slice(0, 7)), ...Object.keys(res.monthly || {})]).sort();
@@ -641,7 +641,22 @@ for (const rows of Object.values(tables)) for (const r of rows) {
   if (d && (!latest || d > latest) && d <= new Date().toISOString().slice(0, 10)) latest = d;
 }
 
-const data = { generatedAt: new Date().toISOString(), latest, sources, missing, notes, tables: packed };
+// when each file in data/raw was last uploaded and by whom (from git), for the admin page's Data files list
+function fileInfo() {
+  const out = {};
+  try {
+    const ls = cp.execFileSync('git', ['ls-files', '-s', '--', 'data/raw'], { cwd: ROOT, encoding: 'utf8' });
+    for (const line of ls.split('\n')) {
+      const m = line.match(/^\d+ ([0-9a-f]{40}) \d+\t(.+)$/); if (!m) continue;
+      const rel = m[2].replace(/^"|"$/g, ''), name = path.basename(rel);
+      if (rel.slice('data/raw/'.length).includes('/')) continue;
+      const lg = cp.execFileSync('git', ['log', '-1', '--format=%ct%x09%an', '--', rel], { cwd: ROOT, encoding: 'utf8' }).trim().split('\t');
+      out[name] = { sha: m[1], t: lg[0] ? new Date(+lg[0] * 1000).toISOString() : null, by: lg[1] || '' };
+    }
+  } catch (e) { /* not a git checkout */ }
+  return out;
+}
+const data = { generatedAt: new Date().toISOString(), latest, sources, missing, notes, tables: packed, fileInfo: fileInfo() };
 const json = JSON.stringify(data);
 
 // ---------- write the outputs ----------
@@ -651,8 +666,11 @@ fs.writeFileSync(path.join(ROOT, 'data', 'ops-data.js'), 'window.OPS_DATA=' + js
 const htmlPath = path.join(ROOT, 'index.html');
 let html = fs.readFileSync(htmlPath, 'utf8');
 html = html.replace(/\/\*OPS_DATA_START\*\/[\s\S]*?\/\*OPS_DATA_END\*\//, () => '/*OPS_DATA_START*/window.OPS_DATA_EMBED=' + json.replace(/<\/script/gi, '<\\/script') + ';/*OPS_DATA_END*/');
-fs.writeFileSync(htmlPath, html);
+// index.html in the repository is left alone (only the published copy in _site gets the data built in),
+// so uploading a new index.html never clashes with the build
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
+if (fs.existsSync(path.join(ROOT, 'admin.html'))) fs.copyFileSync(path.join(ROOT, 'admin.html'), path.join(OUT, 'admin.html'));
+fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 fs.copyFileSync(path.join(ROOT, 'data', 'ops-data.json'), path.join(OUT, 'data', 'ops-data.json'));
 fs.copyFileSync(path.join(ROOT, 'data', 'ops-data.js'), path.join(OUT, 'data', 'ops-data.js'));
 
@@ -667,3 +685,4 @@ for (const s of sources) {
 if (unknownProducts.size) say(`\nProducts not in scripts/product-map.json (shown under their own name, category "Other"): ${[...unknownProducts].join(', ')}`);
 if (missing.length) say(`\nNot found in any file (those visuals show "No data"): ${missing.join(', ')}`);
 fs.writeFileSync(path.join(ROOT, 'data', 'build-report.txt'), log.join('\n') + '\n');
+fs.writeFileSync(path.join(OUT, 'data', 'build-report.txt'), log.join('\n') + '\n');

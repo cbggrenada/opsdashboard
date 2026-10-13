@@ -104,10 +104,11 @@ function renderBar(){
     if(open){
       let lastG=null;
       list=o.map((x,i)=>{const g=s.grouped&&x.g!==lastG?`<div class="msg">${esc(x.g)}</div>`:'';lastG=x.g;
-        return `${g}<label class="mso"><input type="${s.kind==='single'?'radio':'checkbox'}" name="r-${s.id}" data-sl="${s.id}" data-i="${i}" ${v.includes(x.v)?'checked':''}>${esc(x.l)}</label>`}).join('')||'<div class="msg">No values</div>';
-      list=`<div class="msp" role="dialog" aria-label="${esc(s.label)}"><div class="msa">${s.kind==='single'?'':`<button data-all="${s.id}">All</button>`}${s.latest?`<button data-latest="${s.id}">Latest month</button>`:''}${s.kind==='single'?'':`<button data-close="1">Done</button>`}</div><div class="msl">${list}</div></div>`;
+        return `${g}<label class="mso"><input type="${s.kind==='single'||s.latest?'radio':'checkbox'}" name="r-${s.id}" data-sl="${s.id}" data-i="${i}" ${v.includes(x.v)?'checked':''}>${esc(x.l)}</label>`}).join('')||'<div class="msg">No values</div>';
+      list=`<div class="msp" role="dialog" aria-label="${esc(s.label)}"><div class="msa">${s.kind==='single'||s.latest?'':`<button data-all="${s.id}">All</button>`}${s.latest?`<button data-ytd="${s.id}">Year to date</button><button data-latest="${s.id}">Latest month</button>`:''}${s.kind==='single'||s.latest?'':`<button data-close="1">Done</button>`}</div><div class="msl">${list}</div></div>`;
     }
-    return `<div class="ms"><button class="msb ${v.length&&s.kind!=='single'?'on':''}" data-ms="${s.id}" aria-expanded="${open}" aria-haspopup="true"><span class="msk">${esc(s.label)}</span><span>${esc(slicerSummary(p,s))}</span></button>${list}</div>`;
+    const ytd=s.latest&&o.length?`<div class="seg ytdseg" role="group" aria-label="Period"><button data-latest="${s.id}" aria-pressed="${v.length===1}">Month</button><button data-ytd="${s.id}" aria-pressed="${isYtd(p,s)}">YTD</button></div>`:'';
+    return `${ytd}<div class="ms"><button class="msb ${v.length&&s.kind!=='single'?'on':''}" data-ms="${s.id}" aria-expanded="${open}" aria-haspopup="true"><span class="msk">${esc(s.label)}</span><span>${esc(slicerSummary(p,s))}</span></button>${list}</div>`;
   }).join('')+(p.barNote?`<span class="note">${esc(p.barNote)}</span>`:'');
 }
 function sourcesFor(p){
@@ -141,7 +142,7 @@ function renderHero(){
 function visualHTML(v,i){
   const span='s'+(v.span||(v.t==='card'?3:6));
   if(v.t==='sec')return `<div class="sec">${esc(v.title)}</div>`;
-  if(v.t==='row')return `<div class="s12 trow">${v.items.map(x=>visualHTML({...x,span:'x'})).join('')}</div>`;
+  if(v.t==='row')return `<div class="s12 trow" style="--n:${v.items.length};--h:${Math.ceil(v.items.length/2)}">${v.items.map(x=>visualHTML({...x,span:'x'})).join('')}</div>`;
   if(v.t==='card'){
     const na=v.v==null||(typeof v.v==='number'&&!isFinite(v.v));
     const val=na?`<div class="tv na">${esc(v.na||'No data')}</div>`:typeof v.v==='string'?`<div class="tv txt">${esc(v.v)}</div>`:(t=>`<div class="tv${t.length>=10?' xs':t.length>=7?' s':''}">${esc(t)}${v.unit?`<small>${esc(v.unit)}</small>`:''}</div>`)((v.fmt||F.n0)(v.v));

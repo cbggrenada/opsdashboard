@@ -119,6 +119,7 @@ document.addEventListener('click',e=>{
   const sg=e.target.closest('[data-seg]');if(sg){SEL[CUR.id]=SEL[CUR.id]||{};SEL[CUR.id][sg.dataset.seg]=[(CUR.slicers.find(s=>s.id===sg.dataset.seg).options().find(o=>String(o.v)===sg.dataset.v)||{}).v];render();return}
   const ms=e.target.closest('[data-ms]');if(ms){OPEN=OPEN===ms.dataset.ms?null:ms.dataset.ms;renderBar();return}
   const all=e.target.closest('[data-all]');if(all){SEL[CUR.id][all.dataset.all]=[];render();return}
+  const ytd=e.target.closest('[data-ytd]');if(ytd){const s=CUR.slicers.find(x=>x.id===ytd.dataset.ytd);SEL[CUR.id][s.id]=ytdSet(CUR,s);OPEN=null;render();return}
   const lat=e.target.closest('[data-latest]');if(lat){const s=CUR.slicers.find(x=>x.id===lat.dataset.latest);const o=s.options();SEL[CUR.id][s.id]=o.length?[o[o.length-1].v]:[];OPEN=null;render();return}
   if(e.target.closest('[data-close]')){OPEN=null;renderBar();return}
   if(OPEN&&!e.target.closest('.ms')){OPEN=null;renderBar()}
@@ -127,7 +128,7 @@ document.addEventListener('change',e=>{
   const t=e.target;if(!t.dataset||!t.dataset.sl)return;
   const s=CUR.slicers.find(x=>x.id===t.dataset.sl);const o=s.options()[+t.dataset.i];if(!o)return;
   SEL[CUR.id]=SEL[CUR.id]||{};let cur=selOf(CUR,s);
-  if(s.kind==='single'){cur=[o.v];OPEN=null}else cur=t.checked?uniq([...cur,o.v]):cur.filter(x=>x!==o.v);
+  if(s.kind==='single'||s.latest){cur=[o.v];OPEN=null}else cur=t.checked?uniq([...cur,o.v]):cur.filter(x=>x!==o.v);
   SEL[CUR.id][s.id]=cur;render();
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&OPEN){OPEN=null;renderBar()}});

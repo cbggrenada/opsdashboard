@@ -150,7 +150,7 @@ page({sec:'sc',id:'production-kpis',title:'Production KPIs',tab:'Production KPIs
     return [sec('Output and efficiency'),row(out.map(tile)),sec('Loss and utilities intensity'),row(rest.map(tile)),
       chart(`Production cases by month (${per}): actual vs budget`,{span:5,kind:'bar',labels:ks.map(k=>ymLabel(k,oneYear(ks))),sets:[{label:'Actual',data:pcs.map(r=>r.Actual),colors:pcs.map(r=>r.Budget!=null&&r.Actual<r.Budget?'#C0392B':'#01427A')},{label:'Budget',data:pcs.map(r=>r.Budget),type:'line',color:PAL[1],dash:[6,4]}],fmt:F.big}),
       table(`All KPIs, ${per}${mon?' · '+ymLabel(mon):''}`,{span:7,maxH:640,notes,cols:[{h:'KPI',k:'KPI',l:1},{h:'Unit',k:'Unit',l:1},{h:'Actual',k:'Actual',fmt:(v,r)=>r.Unit==='cases'?F.n0(v):F.n1(v)},{h:'Budget',k:'Budget',fmt:(v,r)=>r.Unit==='cases'?F.n0(v):F.n1(v)},{h:'Last year',k:'Last Year',fmt:(v,r)=>r.Unit==='cases'?F.n0(v):F.n1(v)},
-        {h:'Status',l:1,html:1,f:r=>status(r.Actual,r.Budget,String(r['Better Direction']).toLowerCase()!=='lower'),fmt:v=>v?`<span class="pill ${v==='good'?'g':'b'}">${v==='good'?'On target':'Off target'}</span>`:'–'}],
+        {h:'Status',l:1,html:1,f:r=>status(r.Actual,r.Budget,String(r['Better Direction']).toLowerCase()!=='lower'),fmt:v=>v?stPill(v):'–'}],
         rows:kpis.map(k=>R.find(r=>r.KPI===k))}),
     ];
   }});

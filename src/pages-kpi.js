@@ -8,37 +8,44 @@ const lowerBetter=k=>LOWER_BETTER.includes(String(k).toLowerCase().trim());
 const isCount=k=>/cases/i.test(k);
 const kpiFmt=k=>isCount(k)?F.n0:F.n1;
 function kpiAgg(rs,k,col){const v=nums(rs,col);if(!v.length)return null;return isCount(k)?v.reduce((a,b)=>a+b,0):v.reduce((a,b)=>a+b,0)/v.length}
-const stPill=s=>s?`<span class="pill ${s==='good'?'g':'b'}">${s==='good'?'On target':'Off target'}</span>`:'<span class="m">–</span>';
 const latestMonthDef=t=>()=>{const ks=uniq((T[t]||[]).map(ymKey).filter(Boolean)).sort();return ks.slice(-1)};
 
 page({sec:'kpi',id:'scorecard',title:'Supply chain KPI scorecard',tab:'Scorecard',tables:['Scorecard_Monthly'],
-  slicers:[monthSlicer(['Scorecard_Monthly'],{def:latestMonthDef('Scorecard_Monthly')})],
-  barNote:'Several months: cases are added up, other KPIs are averaged.',
+  slicers:[monthSlicer(['Scorecard_Monthly'],{def:latestMonthDef('Scorecard_Monthly')}),
+    segSlicer('show','Show',['All KPIs','On target','Near target','Off target'],'All KPIs'),segSlicer('order','Order',['By department','By status'],'By department')],
+  barNote:'YTD: Actual is the year-to-date figure. Several months: cases are added up, other KPIs are averaged. Near target = missing the budget by 5% of the budget or less.',
   build(c){
     const R=c.rows('Scorecard_Monthly');const ks=uniq(R.map(ymKey)).sort();const last=ks[ks.length-1];
+    const show={'On target':'good','Near target':'warn','Off target':'bad'}[c.one('show')]||null,byStatus=c.one('order')==='By status';
+    const Y=isYtd(c.p,c.p.slicers[0]);   // year to date picked: Actual is the official YTD figure of the latest month
     const kpis=[...group(R,r=>r.KPI).entries()].sort((a,b)=>(a[1][0]['KPI Sort']||0)-(b[1][0]['KPI Sort']||0));
-    const rows=[];let lastDept=null;let on=0,off=0;const deptStat={};
+    const items=[];const cnt={good:0,warn:0,bad:0};const deptStat={};
     for(const [k,rs] of kpis){
-      const d=rs[0].Department||'';if(d!==lastDept){rows.push({_grp:d});lastDept=d}
-      const a=kpiAgg(rs,k,'Actual'),b=kpiAgg(rs,k,'Budget'),py=kpiAgg(rs,k,'Prior Year');const ytdR=rs.find(r=>ymKey(r)===last);
-      const st=status(a,b,!lowerBetter(k));if(st==='good')on++;else if(st==='bad')off++;
+      const d=rs[0].Department||'';
+      const ytdR=rs.find(r=>ymKey(r)===last);const a0=kpiAgg(rs,k,'Actual'),a=Y&&ytdR&&isNum(ytdR.YTD)?ytdR.YTD:a0,b=kpiAgg(rs,k,'Budget'),py=kpiAgg(rs,k,'Prior Year');
+      const st=status(a,b,!lowerBetter(k));if(st)cnt[st]++;
       deptStat[d]=deptStat[d]||{on:0,n:0};if(st){deptStat[d].n++;if(st==='good')deptStat[d].on++}
-      rows.push({k,a,b,py,ytd:ytdR?ytdR.YTD:null,st,vs:a!=null&&b!=null?a-b:null});
+      items.push({k,d,a,b,py,ytd:ytdR?ytdR.YTD:null,st,vs:a!=null&&b!=null?a-b:null});
     }
-    const n=on+off;
+    const n=cnt.good+cnt.warn+cnt.bad,pc=x=>n?`${fmtN(x/n*100,0)}% of ${n} KPIs with a budget`:'';
+    // rows: filtered by status, grouped by department or by status (on target, near target, off target)
+    const shown=items.filter(x=>!show||x.st===show);const rows=[];
+    if(byStatus){for(const [st,l] of [['good','On target'],['warn','Near target'],['bad','Off target'],[null,'No budget']]){const g=shown.filter(x=>(x.st||null)===st);if(g.length){rows.push({_grp:`${l} (${g.length})`});rows.push(...g)}}}
+    else{let lastDept=null;for(const x of shown){if(x.d!==lastDept){rows.push({_grp:x.d});lastDept=x.d}rows.push(x)}}
+    const cols=[{h:'KPI',k:'k',l:1},...(byStatus?[{h:'Department',k:'d',l:1}]:[]),{h:'Actual',k:'a',fmt:(v,r)=>kpiFmt(r.k)(v)},{h:'Budget',k:'b',fmt:(v,r)=>kpiFmt(r.k)(v)},{h:'Prior year',k:'py',fmt:(v,r)=>kpiFmt(r.k)(v)},
+      {h:'vs budget',k:'vs',fmt:(v,r)=>{if(v==null)return '–';const t=kpiFmt(r.k)(v);return /^-0(\.0+)?$/.test(t)?t.slice(1):(v>0?'+':'')+t},cls:(v,r)=>r.st==='good'?'g':r.st==='bad'?'b':''},{h:'YTD',k:'ytd',fmt:(v,r)=>kpiFmt(r.k)(v)},{h:'Status',k:'st',html:1,l:1,fmt:stPill}];
     return [
-      row([card('KPIs on target',on,{st:'good',foot:`Out of ${n} with a budget`,sub:n?`${fmtN(on/n*100,0)}% on target`:''}),card('KPIs off target',off,{st:off?'bad':'good',foot:'Actual worse than budget'}),
+      row([card('On target',cnt.good,{st:'good',foot:'Actual meets or beats budget',sub:pc(cnt.good)}),card('Near target',cnt.warn,{st:'warn',foot:'Within 5% of budget',sub:pc(cnt.warn)}),card('Off target',cnt.bad,{st:'bad',foot:'More than 5% worse than budget',sub:pc(cnt.bad)}),
         ...Object.entries(deptStat).filter(([d,s])=>s.n).map(([d,s])=>card(d,`${s.on} of ${s.n}`,{foot:'KPIs on target',st:s.on===s.n?'good':s.on===0?'bad':'warn'}))]),
-      table('Scorecard',{span:12,hint:ks.length?`${ks.length===1?ymLabel(ks[0]):ks.length+' months: '+ymLabel(ks[0])+' to '+ymLabel(last)} · YTD column is the year to date at ${ymLabel(last)}${R.some(r=>r._calc)?' · '+uniq(R.filter(r=>r._calc).map(ymKey)).sort().map(ymLabel).join(', ')+' worked out from the raw files (no Ops KPIs MD report or SCTCM report for it yet), so plant availability and the bottling detail KPIs are not shown':''}`:'',maxH:900,
-        cols:[{h:'KPI',k:'k',l:1},{h:'Actual',k:'a',fmt:(v,r)=>kpiFmt(r.k)(v)},{h:'Budget',k:'b',fmt:(v,r)=>kpiFmt(r.k)(v)},{h:'Prior year',k:'py',fmt:(v,r)=>kpiFmt(r.k)(v)},
-          {h:'vs budget',k:'vs',fmt:(v,r)=>{if(v==null)return '–';const t=kpiFmt(r.k)(v);return /^-0(\.0+)?$/.test(t)?t.slice(1):(v>0?'+':'')+t},cls:(v,r)=>r.st==='good'?'g':r.st==='bad'?'b':''},{h:'YTD',k:'ytd',fmt:(v,r)=>kpiFmt(r.k)(v)},{h:'Status',k:'st',html:1,l:1,fmt:stPill}],rows}),
+      table(show?`Scorecard: ${c.one('show').toLowerCase()} (${shown.length})`:'Scorecard',{span:12,hint:ks.length?`${ks.length===1?ymLabel(ks[0]):ks.length+' months: '+ymLabel(ks[0])+' to '+ymLabel(last)} · YTD column is the year to date at ${ymLabel(last)}${R.some(r=>r._calc)?' · '+uniq(R.filter(r=>r._calc).map(ymKey)).sort().map(ymLabel).join(', ')+' worked out from the raw files (no Ops KPIs MD report or SCTCM report for it yet), so plant availability and the bottling detail KPIs are not shown':''}`:'',maxH:900,
+        empty:'No KPIs in this group for the selected month.',cols,rows}),
     ];
   }});
 
 page({sec:'kpi',id:'kpi-trends',title:'KPI trends',tab:'KPI trends',tables:['Scorecard_Monthly'],
   slicers:[fieldSlicer('kpi','KPI','Scorecard_Monthly','KPI',{kind:'single',order:v=>v.sort((a,b)=>((T.Scorecard_Monthly.find(r=>r.KPI===a)||{})['KPI Sort']||0)-((T.Scorecard_Monthly.find(r=>r.KPI===b)||{})['KPI Sort']||0))}),monthSlicer(['Scorecard_Monthly'])],
   build(c){
-    const k=c.one('kpi');const all=c.rows('Scorecard_Monthly',['kpi']);const R=all.filter(r=>r.KPI===k);
+    const k=c.one('kpi');const all=c.rows('Scorecard_Monthly',['kpi']);const R=all.filter(r=>r.KPI===k).sort((a,b)=>String(ymKey(a)).localeCompare(String(ymKey(b))));
     const m=byMonth(R,rs=>rs[0]);const f=kpiFmt(k);
     const ks=uniq(all.map(ymKey)).sort();
     const pv=[...group(all,r=>r.KPI).entries()].sort((a,b)=>(a[1][0]['KPI Sort']||0)-(b[1][0]['KPI Sort']||0)).map(([kk,rs])=>{const o={k:kk};ks.forEach(x=>{const r=rs.find(y=>ymKey(y)===x);o[x]=r?r.Actual:null;o['s'+x]=r?status(r.Actual,r.Budget,!lowerBetter(kk)):null});return o});
@@ -46,7 +53,7 @@ page({sec:'kpi',id:'kpi-trends',title:'KPI trends',tab:'KPI trends',tables:['Sco
     return [
       row([card('Latest actual',last?last.Actual:null,{fmt:f,foot:last?ymLabel(ymKey(last)):'',st:last?status(last.Actual,last.Budget,!lowerBetter(k))||'':''}),card('Budget',last?last.Budget:null,{fmt:f}),card('Prior year',last?last['Prior Year']:null,{fmt:f}),card('Year to date',last?last.YTD:null,{fmt:f,foot:lowerBetter(k)?'Lower is better':'Higher is better'})]),
       chart(`${k||''}: actual vs budget and prior year`,{span:12,kind:'bar',labels:m.labels,
-        sets:[{label:'Actual',data:m.data.map(r=>r&&r.Actual),colors:m.data.map(r=>r&&status(r.Actual,r.Budget,!lowerBetter(k))==='bad'?'#C0392B':'#01427A')},{label:'Budget',data:m.data.map(r=>r&&r.Budget),type:'line',color:PAL[1],dash:[6,4]},{label:'Prior year',data:m.data.map(r=>r&&r['Prior Year']),type:'line',color:PAL[5]}],fmt:f,zero:false}),
+        sets:[{label:'Actual',data:m.data.map(r=>r&&r.Actual),colors:m.data.map(r=>r&&stColor(status(r.Actual,r.Budget,!lowerBetter(k))))},{label:'Budget',data:m.data.map(r=>r&&r.Budget),type:'line',color:PAL[1],dash:[6,4]},{label:'Prior year',data:m.data.map(r=>r&&r['Prior Year']),type:'line',color:PAL[5]}],fmt:f,zero:false}),
       table('All KPIs by month',{span:12,hint:'Actual · green on target, red off target',
         cols:[{h:'KPI',k:'k',l:1},...ks.map(x=>({h:ymLabel(x,oneYear(ks)),k:x,fmt:(v,r)=>kpiFmt(r.k)(v),cls:(v,r)=>r['s'+x]==='good'?'g':r['s'+x]==='bad'?'b':''}))],rows:pv}),
     ];
@@ -67,7 +74,7 @@ page({sec:'kpi',id:'production-loss',title:'Production and loss',tab:'Production
         card('Brews per day',bm.data.length?bm.data[bm.data.length-1]['Brews Per Day']:null,{fmt:F.n1,foot:bm.labels.length?`${bm.labels[bm.labels.length-1]}, budget ${fmtN(bm.data[bm.data.length-1].Budget,1)}`:'',st:bm.data.length?status(bm.data[bm.data.length-1]['Brews Per Day'],bm.data[bm.data.length-1].Budget)||'':''}),
         card('Export cases',sum(E.filter(r=>r._y===ey[ey.length-1]),'Cases'),{foot:`${ey[ey.length-1]||''} to date`})]),
       chart('Extract loss by stage',{span:12,kind:'line',hint:'% of extract lost at each stage',labels:labs,sets:stages.map(s=>({label:s,data:ks.map(k=>{const r=X.find(x=>x.Stage===s&&ymKey(x)===k);return r?r.LossPct:null}),dash:s==='Overall'?[]:undefined})),fmt:F.p1}),
-      chart('Overall extract loss vs target',{kind:'bar',labels:ovm.labels,sets:[{label:'Overall loss %',data:ovm.data.map(r=>r&&r.LossPct),colors:ovm.data.map(r=>r&&status(r.LossPct,r.TargetPct,false)==='bad'?'#C0392B':'#01427A')},{label:'Target %',data:ovm.data.map(r=>r&&r.TargetPct),type:'line',color:PAL[1],dash:[6,4]}],fmt:F.p1,empty:'No "Overall" stage rows for this selection.'}),
+      chart('Overall extract loss vs target',{kind:'bar',labels:ovm.labels,sets:[{label:'Overall loss %',data:ovm.data.map(r=>r&&r.LossPct),colors:ovm.data.map(r=>r&&stColor(status(r.LossPct,r.TargetPct,false)))},{label:'Target %',data:ovm.data.map(r=>r&&r.TargetPct),type:'line',color:PAL[1],dash:[6,4]}],fmt:F.p1,empty:'No "Overall" stage rows for this selection.'}),
       chart('Brews per day',{kind:'bar',labels:bm.labels,sets:[{label:'Brews per day',data:bm.data.map(r=>r&&r['Brews Per Day'])},{label:'Budget',data:bm.data.map(r=>r&&r.Budget),type:'line',color:PAL[1],dash:[6,4]}],fmt:F.n1}),
       chart('Export production (cases)',{span:12,kind:'bar',hint:'Not affected by the month filter',labels:em.map(m=>MONTHS[m-1]),sets:ey.map(y=>({label:String(y),data:em.map(m=>sum(E.filter(r=>r._y===y&&r._m===m),'Cases'))})),fmt:F.n0,notes:notesFor('Fact_Export')}),
     ];
