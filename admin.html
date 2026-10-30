@@ -475,7 +475,6 @@ const CHECKLIST=[
   {l:'Cases produced',every:'month',hint:'CBG_Cases_Produced_{Y}.xlsx',match:(n,M,yy,Y)=>/cases[ _]*produced/i.test(n)&&n.includes(Y)},
   {l:'Supply chain KPI model',every:'month',hint:'CBG_Supply_KPI_Model_{Y}.xlsx',match:(n,M,yy,Y)=>/supply[ _]*kpi/i.test(n)&&n.includes(Y)},
   {l:'Cost comparison',every:'month',hint:'CBG_Cost_Comparison_{Y}.xlsx',match:(n,M,yy,Y)=>/cost[ _]*comparison/i.test(n)&&n.includes(Y)},
-  {l:'Cases per hour by shift',every:'month',hint:'Average cases per hr-shift {Y}.csv',match:(n,M,yy,Y)=>/cases[ _]*per[ _]*hr/i.test(n)&&n.includes(Y)},
 ];
 function checklistState(queued){
   const now=new Date(),Y=String(now.getFullYear()),yy=Y.slice(2),M=now.toLocaleString('en-GB',{month:'long'});

@@ -5,7 +5,8 @@ One website that replaces three Power BI reports:
 | Section | Replaces | Pages |
 |---|---|---|
 | Brewing | CBG_Brewing_Process_2026.pbix | Brewing Performance YTD |
-| Supply Chain Rundown | CBG_Supply_Chain_Rundown_2026.pbix | Downtime at a glance, Downtime analytics, 3-year downtime, Failure modes, Production efficiency, Packaging loss, Packaging by shift, 3-year packaging loss, Daily bottling, Cost vs performance, Production KPIs, 3-year brewing loss |
+| Packaging | (new, built from the raw files) | Packaging Performance YTD: cases bottled, plan attainment, line efficiency, cases per hour, OEE, packaging loss, rejects and downtime from Daily_Bottling_Summary, Gross_Efficiency, GBL_Line_Downtime and the Ops KPIs MD report |
+| Supply Chain Rundown | CBG_Supply_Chain_Rundown_2026.pbix | Downtime at a glance, Downtime analytics, 3-year downtime, Failure modes, Production efficiency, Packaging loss, 3-year packaging loss, Daily bottling, Cost vs performance, Production KPIs, 3-year brewing loss |
 | KPI Scorecard | KPI_Model.pbix | Scorecard, KPI trends, Production and loss, Utilities monthly, Utilities weekly, Quality and complaints, Cost, Forecast, Cases produced, Actual vs budget |
 
 KPIs are marked **On target** (meets or beats budget), **Near target** (misses it by 5% of the budget or less) or **Off target**. On the Scorecard, **Show** picks one of those groups and **Order → By status** lists them in that order.
@@ -23,7 +24,6 @@ Notes:
 - A workbook for a new year (for example `CBG_KPI_Monthly_2027.xlsx`) is added alongside the 2026 one, so the year filters show both.
 - **Earlier years (2025):** upload them whenever you're ready, with the year in the file name (`Gross_Efficiency_2025.xlsx`, `GBL_Line_Downtime_2025.xlsx`, `Daily_Bottling_Summary_2025.xlsx`, `September_25_Utilities_Tracking.xlsx`, a 2025 Ops KPIs MD report …). Month filters then open on the latest year (pick 2025 months in the list), and the "Last year" figures fill in from the 2025 files.
 - Sheets are found by their name (for example `Scorecard_Monthly`). A renamed sheet is still found if its header row has all the usual columns.
-- Shift reports (`Average cases per hr-shift 2026(MAY).csv`, or the same layout in Excel) can be added month by month; they all appear on the **Packaging by shift** page.
 - Production efficiency, Packaging loss and Production KPIs are built from the raw workbooks (Gross Efficiency, Daily Process Reports, OEE, FTR, PM compliance, Utilities Tracking). Product names in Gross Efficiency are grouped into families with `scripts/product-map.json`; a new spelling is shown under its own name and listed in `data/build-report.txt` so it can be added there.
 - Downtime (at a glance, analytics, failure modes) comes straight from **GBL_Line_Downtime_2026.xlsx**, and Daily bottling from **Daily_Bottling_Summary_2026.xlsx**. Upload the same workbook again each month. Downtime categories are grouped into buckets with `scripts/downtime-buckets.json`.
 - The **Ops KPIs MD report** (`Ops_KPIs_2026_MD_Report_new_format.xlsx`, one sheet per month such as "New MD September 26") holds the official, corrected KPI figures. Every month it covers replaces the other sources on the Scorecard, KPI trends, Production and loss, Cases produced, Actual vs budget and Production KPIs pages, including plant availability and last year. Add each new month's sheet to the same workbook and upload it again under the same name.
@@ -56,7 +56,6 @@ Click the **padlock** at the top right, or open `<your site>/admin.html`. Sign i
 | Daily_Bottling_Summary_2026.xlsx (raw) | one sheet per month (Jan_26, Feb_26 …) | Daily bottling |
 | CBG_Cost_Comparison_2026.xlsx | Cost_Ops_Comparison | Cost vs performance, Production efficiency (cost per case) |
 | CaribBrewery_PackagingLoss_Model.xlsx | Fact_Packaging, Dim_LossBand | Packaging loss, 2025 only (2026 comes from Gross Efficiency) |
-| Average cases per hr-shift … .csv | the shift sheet | Packaging by shift |
 | CBG_Packaging_Loss_3Yr.xlsx | Pkg_Loss_3Yr | 3-year packaging loss |
 | CBG_Brewing_Loss_3Yr.xlsx | Brew_Loss_3Yr | 3-year brewing loss |
 | [Month]_26_Daily_Process_Report_2026.xlsx (raw, monthly) | Process Loss (Volume), brewing, brews per day tables | Production KPIs (process loss, extract recovery, brews per day) |

@@ -958,30 +958,6 @@ page({sec:'sc',id:'packaging-loss',title:'Packaging loss',tab:'Packaging loss',t
     ];
   }});
 
-page({sec:'sc',id:'shift-packaging',title:'Packaging by shift',tab:'Packaging by shift',tables:['ShiftLog'],
-  slicers:[monthSlicer(['ShiftLog'],{def:()=>{const ks=uniq((T.ShiftLog||[]).map(ymKey).filter(Boolean)).sort();return ks.slice(-1)}}),fieldSlicer('shift','Shift','ShiftLog','Shift'),fieldSlicer('prod','Product','ShiftLog','Product'),fieldSlicer('sup','Supervisor','ShiftLog','Supervisor')],
-  build(c){
-    const R=c.rows('ShiftLog');const days=uniq(R.map(r=>r.Date).filter(Boolean)).length;
-    const cases=sum(R,'Cases');
-    const prod=byCat(R,'Product',rs=>sum(rs,'Cases'));
-    const cph=byCat(R,'Product',rs=>avg(rs.filter(r=>r.CPH>0),'CPH'));
-    const eff=byCat(R,'Product',rs=>avg(rs.filter(r=>r.Efficiency>0),'Efficiency'));
-    const ch=byCat(R,'Product',rs=>sum(rs,'Changeover'));
-    const shifts=byCat(R,'Shift',rs=>sum(rs,'Cases'));
-    return [
-      row([card('Total cases',cases,{foot:'Cases bottled'}),card('Cases per day',div(cases,days),{foot:`Over ${days} production days`}),
-        card('Average cases per hour',avg(R.filter(r=>r.CPH>0),'CPH'),{fmt:F.n1,foot:'Shifts that ran'}),card('Average line efficiency',avg(R.filter(r=>r.Efficiency>0),'Efficiency'),{fmt:F.p1,foot:'Against rated speed'}),
-        card('Changeover time',sum(R,'Changeover'),{unit:'min',foot:`Expected ${fmtN(sum(R,'ExpChangeover'))} min`,st:status(sum(R,'Changeover'),sum(R,'ExpChangeover'),false)}),
-        card('Downtime',sum(R,'Downtime'),{unit:'min',foot:`${fmtN(div(sum(R,'Downtime'),60),1)} hours`})]),
-      chart('Average cases per hour by product',{kind:'bar',labels:cph.labels,sets:[{label:'Cases per hour',data:cph.data}],fmt:F.n0}),
-      chart('Average line efficiency by product',{kind:'hbar',labels:eff.labels,sets:[{label:'Line efficiency %',data:eff.data,color:PAL[2]}],fmt:F.p1}),
-      chart('Changeover time: actual vs expected',{kind:'hbar',hint:'Minutes by product',labels:ch.labels,sets:[{label:'Actual',data:ch.data,color:PAL[1]},{label:'Expected',data:ch.labels.map(k=>sum(R.filter(r=>r.Product===k),'ExpChangeover')),color:PAL[5]}],fmt:F.n0}),
-      table('Cases per day by product',{cols:[{h:'Product',k:'k',l:1},{h:'Cases',k:'v',fmt:F.n0},{h:'Days ran',f:r=>uniq(r.rs.map(x=>x.Date).filter(Boolean)).length,fmt:F.n0},{h:'Cases per day',f:r=>div(r.v,uniq(r.rs.map(x=>x.Date).filter(Boolean)).length),fmt:F.n0}],rows:prod.items,maxH:320}),
-      chart('Total cases by product',{span:8,kind:'bar',labels:prod.labels,sets:[{label:'Cases',data:prod.data,colors:prod.labels.map((_,i)=>PAL[i%PAL.length])}],fmt:F.n0}),
-      chart('Cases by shift',{span:4,kind:'donut',labels:shifts.labels,sets:[{data:shifts.data}],fmt:F.n0,legendPos:'bottom'}),
-    ];
-  }});
-
 page({sec:'sc',id:'pkg-loss-3yr',title:'Packaging loss 3-year comparison',tab:'3-year packaging loss',tables:['Pkg_Loss_3Yr'],
   slicers:[yearSlicer(['Pkg_Loss_3Yr']),fieldSlicer('month','Month','Pkg_Loss_3Yr',r=>MONTHS[r._m-1],{order:v=>v.sort((a,b)=>MONTHS.indexOf(a)-MONTHS.indexOf(b))})],
   build(c){

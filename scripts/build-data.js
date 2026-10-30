@@ -391,13 +391,8 @@ for (const f of files) {
       } else src.ignored.push(sh.name);
       continue;
     }
-    const hiShift = shiftHeader(sh.rows);
-    if (hiShift >= 0) {
-      const rows = parseShift(sh.rows, hiShift, f, fy).map(r => ({ ...r, _file: f }));
-      (candidates.ShiftLog = candidates.ShiftLog || []).push({ file: f, time: src.time, rows });
-      src.tables.push({ name: 'ShiftLog', sheet: sh.name, rows: rows.length });
-      continue;
-    }
+    // shift reports (Average cases per hr-shift) are no longer used by the dashboard
+    if (shiftHeader(sh.rows) >= 0) { src.ignored.push(sh.name + ' (shift report, not used)'); continue; }
     const exact = SCHEMA_NAMES.find(t => norm(t) === norm(sh.name));
     let pick = null;
     if (exact) { const hd = findHeader(sh.rows, SCHEMA[exact]); if (hd.share >= 0.6) pick = { t: exact, ...hd }; }
@@ -624,7 +619,7 @@ for (const [t, k, b] of [['Scorecard_Monthly', 'KPI', 'Budget'], ['Fact_ExtractL
   const rows = tables[t] || []; const src = rows.filter(r => r[b] != null).sort((x, y) => (y._y * 100 + y._m) - (x._y * 100 + x._m));
   for (const r of rows) if (r[b] == null && (r._calc || (fillTables[t] || []).includes(r))) { const f = src.find(x => !k || x[k] === r[k]); if (f) r[b] = f[b]; }
 }
-const missing = [...SCHEMA_NAMES, 'ShiftLog'].filter(t => !tables[t] || !tables[t].length);
+const missing = [...SCHEMA_NAMES].filter(t => !tables[t] || !tables[t].length);
 
 // compact form: column list + rows of values
 const packed = {};
