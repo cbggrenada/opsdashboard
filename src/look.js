@@ -13,7 +13,7 @@ new MutationObserver(()=>{try{render()}catch(e){}}).observe(document.documentEle
 
 /* Profit Isle-style layout: section icons in the side rail, breadcrumb and page tabs in the black band */
 (function(){
-  const ICON={kpi:'<path d="M4 19V5M4 19h16"/><path d="M8 15l3-4 3 2 5-6"/>',sc:'<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/>',brew:'<path d="M7 3h10l-1 18H8z"/><path d="M7.5 9h9"/>'};
+  const ICON={kpi:'<path d="M4 19V5M4 19h16"/><path d="M8 15l3-4 3 2 5-6"/>',sc:'<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/>',brew:'<path d="M7 3h10l-1 18H8z"/><path d="M7.5 9h9"/>',pkg:'<path d="M10 2h4v3l1.5 2.5V21a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1V7.5L10 5z"/><path d="M8.5 12h7"/><path d="M8.5 16h7"/>'};
   const hero=document.querySelector('.hero'),tabs=document.getElementById('tabs');
   if(hero&&tabs){const bar=document.getElementById('bar');hero.insertBefore(tabs,bar)}
   document.getElementById('railTog').onclick=()=>{document.body.classList.toggle('rail-open')};
