@@ -95,7 +95,7 @@ page({sec:'kpi',id:'utilities-monthly',title:'Utilities monthly',tab:'Utilities 
       const rat=ks.map(k=>{const r=S.find(y=>y.KPI===x.k&&ymKey(y)===k);return r?r.Actual:null});
       const bud=ks.map(k=>{const r=S.find(y=>y.KPI===x.k&&ymKey(y)===k);return r?r.Budget:null});
       out.push(chart(`${x.u==='CO2'?'CO₂':x.u}: ${x.ratio}`,{span:6,kind:'bar',hint:`Bars: ${x.unit} used · line: ${x.ratio} against budget (dashed)`,labels:labs,
-        sets:[{label:`${x.unit} used`,data:used,color:'#B5D3EE',vl:false},{label:x.ratio,data:rat,type:'line',axis:'y2',color:PAL[0],vl:true},{label:'Budget',data:bud,type:'line',axis:'y2',color:PAL[1],dash:[6,4]}],fmt:F.big,fmt2:F.n1,zero2:false,vl:false}));
+        sets:[{label:`${x.unit} used`,data:used,color:'#B5D3EE',vl:false},{label:x.ratio,data:rat,type:'line',axis:'y2',color:PAL[0],vl:true},{label:'Budget',data:bud,type:'line',axis:'y2',color:PAL[1],dash:[6,4]}],fmt:F.big,fmt2:F.n1,zero2:false,vl:false,notes:x.u==='Fuel'?notesFor('Fuel_Meter'):[]}));
     }
     const pm=byMonth(S.filter(r=>/maintenance compliance/i.test(r.KPI)),rs=>rs[0]);
     out.push(chart('PM compliance %',{span:12,kind:'bar',labels:pm.labels,sets:[{label:'PM compliance %',data:pm.data.map(r=>r&&r.Actual),colors:pm.data.map(r=>r&&r.Budget!=null&&r.Actual<r.Budget?'#C0392B':'#01427A')},{label:'Budget',data:pm.data.map(r=>r&&r.Budget),type:'line',color:PAL[1],dash:[6,4]}],fmt:F.p0}));
@@ -114,7 +114,7 @@ page({sec:'kpi',id:'utilities-weekly',title:'Utilities weekly',tab:'Utilities we
     for(const x of [...UT,{u:'Solar',unit:'kWh'}]){
       const data=wk.map(k=>{const rs=W.filter(r=>r.Utility===x.u&&`${r._y}-${pad(r._m)}-${r.Week}`===k);const v=sum(rs,'Value');const d=sum(rs,'Days');return perDay?div(v,d):v});
       if(!data.some(v=>v))continue;
-      out.push(chart(`${x.u==='CO2'?'CO₂':x.u} (${x.unit}${perDay?' per day':''})`,{span:6,kind:'bar',hint:'W5 is the short end-of-month week',labels:wk.map(lab),sets:[{label:x.unit,data,color:PAL[UT.findIndex(y=>y.u===x.u)+1]||PAL[0]}],fmt:F.big,vl:wk.length<=10}));
+      out.push(chart(`${x.u==='CO2'?'CO₂':x.u} (${x.unit}${perDay?' per day':''})`,{span:6,kind:'bar',hint:'W5 is the short end-of-month week',labels:wk.map(lab),sets:[{label:x.unit,data,color:PAL[UT.findIndex(y=>y.u===x.u)+1]||PAL[0]}],fmt:F.big,vl:wk.length<=10,notes:x.u==='Fuel'?notesFor('Fuel_Meter'):[]}));
     }
     return out;
   }});

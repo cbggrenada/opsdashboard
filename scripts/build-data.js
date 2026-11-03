@@ -258,6 +258,7 @@ function utilityTables(months) {
   return { weekly, monthly };
 }
 const utilMonths = []; // {file,time,y,m,days}
+const fuelNotes = []; // months whose fuel comes from the boiler's Auto Flame meter
 
 // ---------- other raw workbooks, read with the same readers as the CBG production dashboard ----------
 // Gross_Efficiency (one row per production run), Daily Process Reports, OEE, FTR and PM compliance workbooks.
@@ -386,6 +387,22 @@ for (const f of files) {
     if (isTracking) {
       const u = /^\s*utility analysis/i.test(sh.name) ? parseUtilTracking(sh.rows, sh.name, f) : null;
       if (u) {
+        // main boiler meter not read: take the month's fuel from the Auto Flame meter on the Fuel sheet
+        const fuelSh = sheets.find(s => /^fuel$/i.test(s.name.trim()));
+        const af = fuelSh ? RP.autoFlameFuel(fuelSh.rows) : null;
+        if (af) {
+          const main = {}; for (const [d, v] of Object.entries(u.days)) main[d] = v.Fuel || 0;
+          const n = RP.stuckMeterDays(main, af);
+          if (n >= RP.AF_MIN_DAYS) {
+            const lastDay = new Date(Date.UTC(u.y, u.m, 0)).getUTCDate();
+            const was = Object.values(u.days).reduce((a, v) => a + (v.Fuel || 0), 0);
+            for (const v of Object.values(u.days)) if ('Fuel' in v) v.Fuel = 0;
+            let t = 0; for (const [d, v] of Object.entries(af)) { const dd = Math.min(+d, lastDay); const x = u.days[dd] || (u.days[dd] = {}); x.Fuel = (x.Fuel || 0) + v; t += v; }
+            const mon = MON[u.m - 1][0].toUpperCase() + MON[u.m - 1].slice(1);
+            src.note = `the main boiler fuel meter ("Boilers tot.") shows no fuel on ${n} days that the Auto Flame meter shows the boiler running, so ${mon} ${u.y} fuel comes from the Auto Flame meter (${Math.round(t).toLocaleString('en-US')} L, against ${Math.round(was).toLocaleString('en-US')} L on the main meter)`;
+            fuelNotes.push(`${mon} ${u.y}: fuel is from the boiler's Auto Flame meter, because the main meter wasn't read on ${n} days.`);
+          }
+        }
         utilMonths.push({ file: f, time: src.time, ...u });
         src.tables.push({ name: 'Fact_Utilities_Monthly', sheet: sh.name, rows: Object.keys(u.days).length + ' days' }, { name: 'Fact_Utilities_Weekly', sheet: sh.name, rows: Object.keys(u.days).length + ' days' });
       } else src.ignored.push(sh.name);
@@ -651,6 +668,7 @@ function fileInfo() {
   } catch (e) { /* not a git checkout */ }
   return out;
 }
+if (fuelNotes.length) notes.Fuel_Meter = [...new Set(fuelNotes)];
 const data = { generatedAt: new Date().toISOString(), latest, sources, missing, notes, tables: packed, fileInfo: fileInfo() };
 const json = JSON.stringify(data);
 
@@ -674,6 +692,7 @@ say(`\nBuilt ${data.generatedAt} from ${files.length} file(s). Latest data: ${la
 for (const s of sources) {
   say(`- ${s.file}${s.error ? '  ERROR: ' + s.error : ''}`);
   if (s.raw) say(`    raw file: ${s.raw}`);
+  if (s.note) say(`    note: ${s.note}`);
   for (const x of s.tables) say(`    ${x.used ? 'used   ' : 'older  '} ${x.name} (sheet "${x.sheet}", ${x.rows}${typeof x.rows === 'number' ? ' rows' : ''})`);
   if (s.ignored.length) say(`    not needed: ${s.ignored.join(', ')}`);
 }
