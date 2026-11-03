@@ -1,38 +1,38 @@
 
-Built 2026-10-30T15:55:32.995Z from 48 file(s). Latest data: 2026-10-30
+Built 2026-11-03T01:10:44.784Z from 48 file(s). Latest data: 2026-11-01
 - April '26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-04 to 2026-04
     used    Production_KPIs (sheet "Daily Process Report", raw)
-    older   Scorecard_Monthly (sheet "Daily Process Report", raw)
-    older   Fact_ExtractLoss (sheet "Daily Process Report", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
-    older   Cases_Monthly (sheet "Daily Process Report", raw)
+    used    Scorecard_Monthly (sheet "Daily Process Report", raw)
+    used    Fact_ExtractLoss (sheet "Daily Process Report", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
+    used    Cases_Monthly (sheet "Daily Process Report", raw)
 - April_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis April 2026", 30 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis April 2026", 30 days)
     used    Production_KPIs (sheet "Utilities Tracking", raw)
-    older   Scorecard_Monthly (sheet "Utilities Tracking", raw)
-    older   Fact_ExtractLoss (sheet "Utilities Tracking", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
-    older   Cases_Monthly (sheet "Utilities Tracking", raw)
+    used    Scorecard_Monthly (sheet "Utilities Tracking", raw)
+    used    Fact_ExtractLoss (sheet "Utilities Tracking", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
+    used    Cases_Monthly (sheet "Utilities Tracking", raw)
     not needed: Entries April 2026, Steam Mass Flow , Fuel , Water , Elec.April 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - August'26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-08 to 2026-08
     used    Production_KPIs (sheet "Daily Process Report", raw)
-    older   Scorecard_Monthly (sheet "Daily Process Report", raw)
-    older   Fact_ExtractLoss (sheet "Daily Process Report", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
-    older   Cases_Monthly (sheet "Daily Process Report", raw)
+    used    Scorecard_Monthly (sheet "Daily Process Report", raw)
+    used    Fact_ExtractLoss (sheet "Daily Process Report", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
+    used    Cases_Monthly (sheet "Daily Process Report", raw)
 - August_2026.xls
     raw file: Monthly process loss, 2026-08 to 2026-08
 - August_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis August 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis August 2026", 31 days)
     used    Production_KPIs (sheet "Utilities Tracking", raw)
-    older   Scorecard_Monthly (sheet "Utilities Tracking", raw)
-    older   Fact_ExtractLoss (sheet "Utilities Tracking", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
-    older   Cases_Monthly (sheet "Utilities Tracking", raw)
+    used    Scorecard_Monthly (sheet "Utilities Tracking", raw)
+    used    Fact_ExtractLoss (sheet "Utilities Tracking", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
+    used    Cases_Monthly (sheet "Utilities Tracking", raw)
     not needed: Entries Agust 2026, Steam Mass Flow , Fuel , Water , Elec.August 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - Average cases per hr-shift 2026(MAY).csv
     not needed: Average cases per hr-shift 2026(MAY).csv (shift report, not used)
@@ -82,27 +82,27 @@ Built 2026-10-30T15:55:32.995Z from 48 file(s). Latest data: 2026-10-30
 - FTR Calculations 2026.xlsx
     raw file: FTR workbook, 2026-01 to 2026-12
     used    Production_KPIs (sheet "FTR workbook", raw)
-    older   Scorecard_Monthly (sheet "FTR workbook", raw)
-    older   Fact_ExtractLoss (sheet "FTR workbook", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "FTR workbook", raw)
-    older   Cases_Monthly (sheet "FTR workbook", raw)
+    used    Scorecard_Monthly (sheet "FTR workbook", raw)
+    used    Fact_ExtractLoss (sheet "FTR workbook", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "FTR workbook", raw)
+    used    Cases_Monthly (sheet "FTR workbook", raw)
 - FTR Manufacturing 2026.xlsx
     not needed: MTD Performance, Brewer's Performance , MTD - Time & OG, Brewer's Performance- Extract, FTR Brewhouse-New, Chart2, FTR Brewhouse, FTR Fermentation, GBL BBT Score , FTR BBT, FTR Packaging, FTR Finished Product, GBL  Finished Product , Chart1
 - February '26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-02 to 2026-02
     used    Production_KPIs (sheet "Daily Process Report", raw)
-    older   Scorecard_Monthly (sheet "Daily Process Report", raw)
-    older   Fact_ExtractLoss (sheet "Daily Process Report", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
-    older   Cases_Monthly (sheet "Daily Process Report", raw)
+    used    Scorecard_Monthly (sheet "Daily Process Report", raw)
+    used    Fact_ExtractLoss (sheet "Daily Process Report", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
+    used    Cases_Monthly (sheet "Daily Process Report", raw)
 - February_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis February 2026", 28 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis February 2026", 28 days)
     used    Production_KPIs (sheet "Utilities Tracking", raw)
-    older   Scorecard_Monthly (sheet "Utilities Tracking", raw)
-    older   Fact_ExtractLoss (sheet "Utilities Tracking", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
-    older   Cases_Monthly (sheet "Utilities Tracking", raw)
+    used    Scorecard_Monthly (sheet "Utilities Tracking", raw)
+    used    Fact_ExtractLoss (sheet "Utilities Tracking", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
+    used    Cases_Monthly (sheet "Utilities Tracking", raw)
     not needed: Entries February 2026, Steam Mass Flow , Fuel , Water , Elec.February 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - GBL_3Year_Downtime_Model.xlsx
     used    Fact_Downtime_3Yr (sheet "Fact_Downtime_3Yr", 792 rows)
@@ -136,107 +136,108 @@ Built 2026-10-30T15:55:32.995Z from 48 file(s). Latest data: 2026-10-30
     used    Fact_Efficiency (sheet "Gross Efficiency", raw)
     used    Fact_Packaging (sheet "Gross Efficiency", raw)
     used    Production_KPIs (sheet "Gross Efficiency", raw)
-    older   Scorecard_Monthly (sheet "Gross Efficiency", raw)
-    older   Fact_ExtractLoss (sheet "Gross Efficiency", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Gross Efficiency", raw)
-    older   Cases_Monthly (sheet "Gross Efficiency", raw)
+    used    Scorecard_Monthly (sheet "Gross Efficiency", raw)
+    used    Fact_ExtractLoss (sheet "Gross Efficiency", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Gross Efficiency", raw)
+    used    Cases_Monthly (sheet "Gross Efficiency", raw)
 - January '26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-01 to 2026-01
     used    Production_KPIs (sheet "Daily Process Report", raw)
-    older   Scorecard_Monthly (sheet "Daily Process Report", raw)
-    older   Fact_ExtractLoss (sheet "Daily Process Report", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
-    older   Cases_Monthly (sheet "Daily Process Report", raw)
+    used    Scorecard_Monthly (sheet "Daily Process Report", raw)
+    used    Fact_ExtractLoss (sheet "Daily Process Report", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
+    used    Cases_Monthly (sheet "Daily Process Report", raw)
 - January_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis January 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis January 2026", 31 days)
     used    Production_KPIs (sheet "Utilities Tracking", raw)
-    older   Scorecard_Monthly (sheet "Utilities Tracking", raw)
-    older   Fact_ExtractLoss (sheet "Utilities Tracking", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
-    older   Cases_Monthly (sheet "Utilities Tracking", raw)
+    used    Scorecard_Monthly (sheet "Utilities Tracking", raw)
+    used    Fact_ExtractLoss (sheet "Utilities Tracking", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
+    used    Cases_Monthly (sheet "Utilities Tracking", raw)
     not needed: Entries January 2026, Steam Mass Flow , Fuel , Water , Elec.January 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - July'26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-07 to 2026-07
     used    Production_KPIs (sheet "Daily Process Report", raw)
-    older   Scorecard_Monthly (sheet "Daily Process Report", raw)
-    older   Fact_ExtractLoss (sheet "Daily Process Report", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
-    older   Cases_Monthly (sheet "Daily Process Report", raw)
+    used    Scorecard_Monthly (sheet "Daily Process Report", raw)
+    used    Fact_ExtractLoss (sheet "Daily Process Report", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
+    used    Cases_Monthly (sheet "Daily Process Report", raw)
 - July_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis July 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis July 2026", 31 days)
     used    Production_KPIs (sheet "Utilities Tracking", raw)
-    older   Scorecard_Monthly (sheet "Utilities Tracking", raw)
-    older   Fact_ExtractLoss (sheet "Utilities Tracking", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
-    older   Cases_Monthly (sheet "Utilities Tracking", raw)
+    used    Scorecard_Monthly (sheet "Utilities Tracking", raw)
+    used    Fact_ExtractLoss (sheet "Utilities Tracking", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
+    used    Cases_Monthly (sheet "Utilities Tracking", raw)
     not needed: Entries July 2026, Steam Mass Flow , Fuel , Water , Elec.July 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - June'26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-06 to 2026-06
     used    Production_KPIs (sheet "Daily Process Report", raw)
-    older   Scorecard_Monthly (sheet "Daily Process Report", raw)
-    older   Fact_ExtractLoss (sheet "Daily Process Report", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
-    older   Cases_Monthly (sheet "Daily Process Report", raw)
+    used    Scorecard_Monthly (sheet "Daily Process Report", raw)
+    used    Fact_ExtractLoss (sheet "Daily Process Report", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
+    used    Cases_Monthly (sheet "Daily Process Report", raw)
 - June_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis June 2026", 30 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis June 2026", 30 days)
     used    Production_KPIs (sheet "Utilities Tracking", raw)
-    older   Scorecard_Monthly (sheet "Utilities Tracking", raw)
-    older   Fact_ExtractLoss (sheet "Utilities Tracking", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
-    older   Cases_Monthly (sheet "Utilities Tracking", raw)
+    used    Scorecard_Monthly (sheet "Utilities Tracking", raw)
+    used    Fact_ExtractLoss (sheet "Utilities Tracking", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
+    used    Cases_Monthly (sheet "Utilities Tracking", raw)
     not needed: Entries June 2026, Steam Mass Flow , Fuel , Water , Elec.June 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - March'26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-03 to 2026-03
     used    Production_KPIs (sheet "Daily Process Report", raw)
-    older   Scorecard_Monthly (sheet "Daily Process Report", raw)
-    older   Fact_ExtractLoss (sheet "Daily Process Report", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
-    older   Cases_Monthly (sheet "Daily Process Report", raw)
+    used    Scorecard_Monthly (sheet "Daily Process Report", raw)
+    used    Fact_ExtractLoss (sheet "Daily Process Report", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
+    used    Cases_Monthly (sheet "Daily Process Report", raw)
 - March_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis March 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis March 2026", 31 days)
     used    Production_KPIs (sheet "Utilities Tracking", raw)
-    older   Scorecard_Monthly (sheet "Utilities Tracking", raw)
-    older   Fact_ExtractLoss (sheet "Utilities Tracking", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
-    older   Cases_Monthly (sheet "Utilities Tracking", raw)
+    used    Scorecard_Monthly (sheet "Utilities Tracking", raw)
+    used    Fact_ExtractLoss (sheet "Utilities Tracking", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
+    used    Cases_Monthly (sheet "Utilities Tracking", raw)
     not needed: Entries March 2026, Steam Mass Flow , Fuel , Water , Elec.March 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - May'26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-05 to 2026-05
     used    Production_KPIs (sheet "Daily Process Report", raw)
-    older   Scorecard_Monthly (sheet "Daily Process Report", raw)
-    older   Fact_ExtractLoss (sheet "Daily Process Report", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
-    older   Cases_Monthly (sheet "Daily Process Report", raw)
+    used    Scorecard_Monthly (sheet "Daily Process Report", raw)
+    used    Fact_ExtractLoss (sheet "Daily Process Report", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
+    used    Cases_Monthly (sheet "Daily Process Report", raw)
 - May_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis May 2026", 31 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis May 2026", 31 days)
     used    Production_KPIs (sheet "Utilities Tracking", raw)
-    older   Scorecard_Monthly (sheet "Utilities Tracking", raw)
-    older   Fact_ExtractLoss (sheet "Utilities Tracking", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
-    older   Cases_Monthly (sheet "Utilities Tracking", raw)
+    used    Scorecard_Monthly (sheet "Utilities Tracking", raw)
+    used    Fact_ExtractLoss (sheet "Utilities Tracking", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
+    used    Cases_Monthly (sheet "Utilities Tracking", raw)
     not needed: Entries May 2026, Steam Mass Flow , Fuel , Water , Elec.May 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - October'26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-10 to 2026-10
     used    Production_KPIs (sheet "Daily Process Report", raw)
-    older   Scorecard_Monthly (sheet "Daily Process Report", raw)
-    older   Fact_ExtractLoss (sheet "Daily Process Report", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
-    older   Cases_Monthly (sheet "Daily Process Report", raw)
+    used    Scorecard_Monthly (sheet "Daily Process Report", raw)
+    used    Fact_ExtractLoss (sheet "Daily Process Report", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
+    used    Cases_Monthly (sheet "Daily Process Report", raw)
 - October_2026.xls
     raw file: Monthly process loss, 2026-10 to 2026-10
 - October_26_Utilities_Tracking.xlsx
+    note: the main boiler fuel meter ("Boilers tot.") shows no fuel on 25 days that the Auto Flame meter shows the boiler running, so Oct 2026 fuel comes from the Auto Flame meter (65,376 L, against 1,353 L on the main meter)
     used    Fact_Utilities_Monthly (sheet "Utility Analysis October 2026", 29 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis October 2026", 29 days)
     used    Production_KPIs (sheet "Utilities Tracking", raw)
-    older   Scorecard_Monthly (sheet "Utilities Tracking", raw)
-    older   Fact_ExtractLoss (sheet "Utilities Tracking", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
-    older   Cases_Monthly (sheet "Utilities Tracking", raw)
+    used    Scorecard_Monthly (sheet "Utilities Tracking", raw)
+    used    Fact_ExtractLoss (sheet "Utilities Tracking", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
+    used    Cases_Monthly (sheet "Utilities Tracking", raw)
     not needed: Entries October 2026, Steam Mass Flow , Fuel , Water , Elec.OCTOBER 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 - Ops KPIs 2026 MD Report new format.xlsx
     raw file: Ops KPIs MD report, Sep 2026, Aug 2026, Jul 2026, Jun 2026, May 2026, Apr 2026, Mar 2026
@@ -248,18 +249,18 @@ Built 2026-10-30T15:55:32.995Z from 48 file(s). Latest data: 2026-10-30
 - September'26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-09 to 2026-09
     used    Production_KPIs (sheet "Daily Process Report", raw)
-    older   Scorecard_Monthly (sheet "Daily Process Report", raw)
-    older   Fact_ExtractLoss (sheet "Daily Process Report", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
-    older   Cases_Monthly (sheet "Daily Process Report", raw)
+    used    Scorecard_Monthly (sheet "Daily Process Report", raw)
+    used    Fact_ExtractLoss (sheet "Daily Process Report", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Daily Process Report", raw)
+    used    Cases_Monthly (sheet "Daily Process Report", raw)
 - September_2026.xls
     raw file: Monthly process loss, 2026-09 to 2026-09
 - September_26_Utilities_Tracking.xlsx
     used    Fact_Utilities_Monthly (sheet "Utility Analysis September 2026", 30 days)
     used    Fact_Utilities_Weekly (sheet "Utility Analysis September 2026", 30 days)
     used    Production_KPIs (sheet "Utilities Tracking", raw)
-    older   Scorecard_Monthly (sheet "Utilities Tracking", raw)
-    older   Fact_ExtractLoss (sheet "Utilities Tracking", raw)
-    older   Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
-    older   Cases_Monthly (sheet "Utilities Tracking", raw)
+    used    Scorecard_Monthly (sheet "Utilities Tracking", raw)
+    used    Fact_ExtractLoss (sheet "Utilities Tracking", raw)
+    used    Fact_BrewsPerDay_Monthly (sheet "Utilities Tracking", raw)
+    used    Cases_Monthly (sheet "Utilities Tracking", raw)
     not needed: Entries September 2026, Sheet2, Steam Mass Flow , Fuel , Water , Elec.SEPTEMBER 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
