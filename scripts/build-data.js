@@ -638,6 +638,14 @@ for (const [t, k, b] of [['Scorecard_Monthly', 'KPI', 'Budget'], ['Fact_ExtractL
 }
 const missing = [...SCHEMA_NAMES].filter(t => !tables[t] || !tables[t].length);
 
+// bottle type per production run, from scripts/bottle-map.json (by product family)
+const BOTTLE_MAP = (() => { try { return require('./bottle-map.json'); } catch (e) { return {}; } })();
+const unmappedBottles = new Set();
+for (const t of ['Fact_Efficiency', 'Fact_Packaging']) for (const r of tables[t] || []) {
+  const fam = r['Product Family'], b = fam && BOTTLE_MAP[fam];
+  r.Bottle = b || 'Not mapped'; if (!b && fam) unmappedBottles.add(fam);
+}
+
 // compact form: column list + rows of values
 const packed = {};
 for (const [t, rows] of Object.entries(tables)) {
@@ -697,6 +705,7 @@ for (const s of sources) {
   if (s.ignored.length) say(`    not needed: ${s.ignored.join(', ')}`);
 }
 if (unknownProducts.size) say(`\nProducts not in scripts/product-map.json (shown under their own name, category "Other"): ${[...unknownProducts].join(', ')}`);
+if (unmappedBottles.size) say(`\nProduct families not in scripts/bottle-map.json (shown as "Not mapped" under Line efficiency by bottle): ${[...unmappedBottles].sort().join(', ')}`);
 if (missing.length) say(`\nNot found in any file (those visuals show "No data"): ${missing.join(', ')}`);
 fs.writeFileSync(path.join(ROOT, 'data', 'build-report.txt'), log.join('\n') + '\n');
 fs.writeFileSync(path.join(OUT, 'data', 'build-report.txt'), log.join('\n') + '\n');

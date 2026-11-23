@@ -7,7 +7,9 @@
    ============================================================= */
 const PKG_T=['Fact_Bottling','Fact_Efficiency','Fact_Packaging','Fact_Downtime'];
 // line efficiency weighted by cases bottled, as on the Production efficiency page
-const pkgEff=rs=>div(sum(rs,r=>isNum(r['Line Efficiency %'])&&isNum(r['Cases Bottled'])?r['Line Efficiency %']*r['Cases Bottled']:null),sum(rs.filter(r=>isNum(r['Line Efficiency %'])),'Cases Bottled'));
+// runs with an impossible efficiency (below 0% or above 100%, from a mistyped fill time) are left out of the efficiency figure
+const effOk=r=>isNum(r['Line Efficiency %'])&&r['Line Efficiency %']>=0&&r['Line Efficiency %']<=100;
+const pkgEff=rs=>div(sum(rs,r=>effOk(r)&&isNum(r['Cases Bottled'])?r['Line Efficiency %']*r['Cases Bottled']:null),sum(rs.filter(effOk),'Cases Bottled'));
 // cases per hour as the SCTCM report counts it: cases bottled ÷ available hours
 const pkgCph=rs=>div(sum(rs,'Cases Bottled'),div(sum(rs,'Available Time'),60));
 const pkgLoss=rs=>{const v=div(sum(rs,'Loss HLs'),sum(rs,'BBT HLs'));return v==null?null:v*100};
@@ -39,6 +41,11 @@ page({sec:'pkg',id:'packaging',title:'Packaging Performance YTD',tab:'Packaging 
     const dCat=byCat(D,'Category',rs=>sum(rs,'Hours'),{top:8});
     const fam=byCat(B,'Product Family',rs=>sum(rs,'Cases Bottled'),{top:10,other:rs=>sum(rs,'Cases Bottled')});
     const effF=byCat(E.filter(r=>(r['Cases Bottled']||0)>0),'Product Family',pkgEff,{top:12});
+    // line efficiency by bottle (bottle per product family from scripts/bottle-map.json); Not mapped goes last
+    const effB=byCat(E.filter(r=>(r['Cases Bottled']||0)>0),r=>r.Bottle||'Not mapped',pkgEff);
+    effB.items.sort((a,b)=>(a.k==='Not mapped')-(b.k==='Not mapped')||(b.v??-1)-(a.v??-1));
+    const brows=effB.items.map(x=>({k:x.k,eff:x.v,cases:sum(x.rs,'Cases Bottled'),cph:pkgCph(x.rs),runs:x.rs.length,fams:(f=>f.length>4?f.slice(0,4).join(', ')+` + ${f.length-4} more`:f.join(', '))(uniq(x.rs.map(r=>r['Product Family'])).sort())}));
+    const bTot=sum(brows,'cases');brows.forEach(r=>r.share=bTot?r.cases/bTot*100:null);
     // monthly summary table
     const mrows=keys.map((k,i)=>{const b=mB.data[i]||[],e=mE.data[i]||[],p=mP.data[i]||[],d=mD.data[i]||[];const pl=b.filter(r=>isNum(r['Cases Planned'])&&r['Cases Planned']>0);
       return {m:mB.labels[i],cases:sum(b,'Cases Bottled'),att:(x=>x==null?null:x*100)(div(sum(pl,'Cases Bottled'),sum(pl,'Cases Planned'))),eff:pkgEff(e),cph:pkgCph(e),loss:pkgLoss(p),
@@ -50,6 +57,7 @@ page({sec:'pkg',id:'packaging',title:'Packaging Performance YTD',tab:'Packaging 
     const effs=mrows.filter(r=>r.eff!=null);if(effs.length>1){const hi=effs.reduce((a,b)=>b.eff>a.eff?b:a),lo=effs.reduce((a,b)=>b.eff<a.eff?b:a);ins.push(`Line efficiency ranged from ${fmtN(lo.eff,1)}% in ${lo.m} to ${fmtN(hi.eff,1)}% in ${hi.m}.`)}
     if(dCat.items.length&&!prodFilter){const t=sum(D,'Hours');ins.push(`Biggest downtime causes: ${topLines(dCat.items,v=>fmtN(v,1)+' h')}${t?`, together ${fmtN(dCat.items.slice(0,3).reduce((a,x)=>a+(x.v||0),0)/t*100,0)}% of all downtime`:''}.`)}
     if(effF.items.length>1)ins.push(`Most efficient product family: ${effF.items[0].k} (${fmtN(effF.items[0].v,1)}%); least: ${effF.items[effF.items.length-1].k} (${fmtN(effF.items[effF.items.length-1].v,1)}%).`);
+    const bad=E.filter(r=>isNum(r['Line Efficiency %'])&&!effOk(r));if(bad.length)ins.push(`${bad.length} run${bad.length===1?' has':'s have'} an impossible line efficiency (below 0% or above 100%, usually a mistyped fill time) and ${bad.length===1?'is':'are'} left out of the efficiency figures: ${uniq(bad.map(r=>r.Date)).map(d=>{const x=new Date(d+'T00:00');return x.getDate()+' '+MONTHS[x.getMonth()]}).join(', ')}.`);
     if(prodFilter)ins.push('Downtime and OEE are recorded for the whole line, so they show only when no product family or category is picked.');
     return [
       card('Cases bottled',cases,{span:3,foot:`${fmtN(days)} production day${days===1?'':'s'}, daily bottling summary`}),
@@ -71,6 +79,11 @@ page({sec:'pkg',id:'packaging',title:'Packaging Performance YTD',tab:'Packaging 
         empty:prodFilter?'Downtime is recorded for the whole line. Clear the product family and category filters to see it.':EMPTY}),
       chart('Cases bottled by product family',{kind:'hbar',size:'lg',hint:'Top 10, the rest grouped as Other',labels:fam.labels,sets:[{label:'Cases',data:fam.data,color:PAL[1]}],fmt:F.n0,empty:EMPTY}),
       chart('Line efficiency by product family',{kind:'hbar',size:'lg',hint:'Weighted by cases bottled · top 12 by efficiency',labels:effF.labels,sets:[{label:'Line efficiency %',data:effF.data,color:PAL[2]}],fmt:F.p1,empty:EMPTY}),
+      chart('Line efficiency by bottle',{kind:'hbar',hint:'Weighted by cases bottled · bottle per product from scripts/bottle-map.json',labels:effB.items.map(x=>x.k),
+        sets:[{label:'Line efficiency %',data:effB.items.map(x=>x.v),colors:effB.items.map(x=>x.k==='Not mapped'?PAL[5]:PAL[0])}],fmt:F.p1,empty:EMPTY}),
+      table('Bottle detail',{hint:'Gross Efficiency runs',empty:EMPTY,
+        cols:[{h:'Bottle',k:'k',l:1},{h:'Line efficiency',k:'eff',fmt:F.p1},{h:'Cases bottled',k:'cases',fmt:F.n0},{h:'Share of cases',k:'share',fmt:F.p1},{h:'Cases per hour',k:'cph',fmt:F.n0},{h:'Runs',k:'runs',fmt:F.n0}],
+        rows:brows,...(brows.length>1?{total:{k:'Total',eff,cases:bTot,share:bTot?100:null,cph,runs:sum(brows,'runs'),}}:{})}),
       table('Month by month',{span:12,hint:'Rejects are per 1,000 cases',empty:EMPTY,
         cols:[{h:'Month',k:'m',l:1},{h:'Cases bottled',k:'cases',fmt:F.n0},{h:'Plan attainment',k:'att',fmt:F.p1},{h:'Line efficiency',k:'eff',fmt:F.p1},{h:'Cases per hour',k:'cph',fmt:F.n0},
           {h:'Packaging loss',k:'loss',fmt:F.p2},{h:'Rejects',k:'rej',fmt:F.n1},{h:'Downtime (h)',k:'dt',fmt:F.n1}],rows:mrows,...(mrows.length>1?{total}:{})}),

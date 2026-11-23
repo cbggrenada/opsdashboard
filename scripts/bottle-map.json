@@ -1,0 +1,7 @@
+{
+ "_note": "Bottle each product family is filled in. Families not listed here show as 'Not mapped' on the Packaging page and are listed in data/build-report.txt. Use the family names from product-map.json.",
+ "Carib Amber": "Amber",
+ "Carib Flint": "Flint",
+ "Stag": "Green",
+ "Ting": "Green"
+}

@@ -162,6 +162,50 @@ page({sec:'sc',id:'failure-modes',title:'Downtime failure modes',tab:'Failure mo
     ];
   }});
 
+// Time stealers: machine downtime from the line downtime log, ranked by equipment
+const isMach=r=>typeOf(r.Category)==='Machine';
+page({sec:'sc',id:'time-stealers',title:'Time stealers by equipment',sub:'machine downtime',tab:'Time stealers',tables:['Fact_Downtime','Failure_Modes'],
+  slicers:[monthSlicer(['Fact_Downtime']),
+    fieldSlicer('equip','Equipment','Fact_Downtime',r=>isMach(r)?r.Category:null,{also:{Failure_Modes:r=>r.Machine}})],
+  build(c){
+    const ALL=c.rows('Fact_Downtime',['equip']),R=c.rows('Fact_Downtime').filter(isMach);
+    const tot=sum(R,'Hours'),allH=sum(ALL,'Hours');
+    const eq=byCat(R,'Category',rs=>sum(rs,'Hours'));let cum=0;
+    const prow=eq.items.filter(x=>x.v>0).map((x,i)=>{cum+=x.v;return {rank:i+1,k:x.k,h:x.v,pct:tot?x.v/tot*100:null,cum:tot?cum/tot*100:null,all:allH?x.v/allH*100:null}});
+    const top=prow[0],top3=prow.slice(0,3),top3pct=top3.length?top3[top3.length-1].cum:null;
+    // month by month, top 5 equipment and the rest as Other
+    const mon=byMonth(R,rs=>rs),top5=prow.slice(0,5).map(x=>x.k),rest=prow.slice(5).map(x=>x.k);
+    const stackSets=[...top5.map(k=>({label:k,data:mon.data.map(rs=>rs&&sum(rs.filter(r=>r.Category===k),'Hours'))})),
+      ...(rest.length?[{label:'Other equipment',data:mon.data.map(rs=>rs&&sum(rs.filter(r=>rest.includes(r.Category)),'Hours')),color:PAL[5]}]:[])];
+    // equipment x month table
+    const mrows=prow.map(x=>{const o={k:x.k};mon.keys.forEach((m,i)=>o[m]=sum((mon.data[i]||[]).filter(r=>r.Category===x.k),'Hours'));o.tot=x.h;o.pct=x.pct;return o});
+    const mtot={k:'Total'};mon.keys.forEach((m,i)=>mtot[m]=sum(mon.data[i]||[],'Hours'));mtot.tot=tot;mtot.pct=tot?100:null;
+    // what steals the time: top failure modes for the biggest stealers (the failure mode sheets are year to date)
+    const FM=c.rows('Failure_Modes'),fmFor=prow.slice(0,c.sel('equip').length?prow.length:5).map(x=>x.k);
+    const frows=fmFor.flatMap(k=>{const g=byCat(FM.filter(r=>r.Machine===k),'Failure Mode',rs=>sum(rs,'Hours YTD'));return g.items.slice(0,3).filter(x=>x.v>0).map((x,i)=>({eq:i?'':k,fm:x.k,h:x.v}))});
+    const ins=[];
+    if(top)ins.push(`${top.k} is the biggest time stealer: ${fmtN(top.h,1)} h, ${fmtN(top.pct,1)}% of machine downtime.`);
+    if(top3.length===3)ins.push(`The top three (${top3.map(x=>x.k).join(', ')}) take ${fmtN(top3pct,0)}% of machine downtime.`);
+    if(allH&&tot)ins.push(`Machine breakdowns are ${fmtN(tot/allH*100,0)}% of all logged downtime; the rest is delays such as changeovers and product delays.`);
+    if(top&&mon.keys.length>1){const s=mon.data.map(rs=>rs?sum(rs.filter(r=>r.Category===top.k),'Hours')||0:0),a=s[s.length-1],b=s[s.length-2];
+      if(b)ins.push(`${top.k}: ${fmtN(a,1)} h in ${mon.labels[mon.labels.length-1]} against ${fmtN(b,1)} h in ${mon.labels[mon.labels.length-2]} (${a>b?'up':'down'} ${fmtN(Math.abs(chg(a,b)),0)}%).`)}
+    const E='No machine downtime for this selection.';
+    return [
+      card('Machine downtime',tot,{fmt:F.n1,unit:'h',span:3,foot:'Equipment stoppages, line downtime log'}),
+      card('Top time stealer',top?top.k:null,{span:3,foot:'Most machine downtime hours',sub:top?`${fmtN(top.h,1)} h · ${fmtN(top.pct,1)}%`:''}),
+      card('Top 3 share',top3pct,{fmt:F.p0,span:3,foot:top3.length?top3.map(x=>x.k).join(', '):'Share of machine downtime'}),
+      card('Share of all downtime',allH&&tot!=null?tot/allH*100:null,{fmt:F.p0,span:3,foot:`Machines vs ${fmtN(allH,1)} h logged in total`}),
+      chart('Time stealers by equipment',{span:12,kind:'bar',hint:'Hours and cumulative % of machine downtime',labels:prow.map(x=>x.k),
+        sets:[{label:'Hours',data:prow.map(x=>x.h)},{label:'Cumulative %',data:prow.map(x=>x.cum),type:'line',axis:'y2',color:PAL[1]}],fmt:F.n1,fmt2:F.p0,y2Max:100,empty:E}),
+      chart('Time stealers by month',{span:12,kind:'stack',hint:'Hours, top 5 equipment',labels:mon.labels,sets:stackSets,fmt:F.n0,empty:E}),
+      table('Equipment downtime by month',{span:12,hint:'Hours',maxH:420,empty:E,
+        cols:[{h:'Equipment',k:'k',l:1},...mon.keys.map((m,i)=>({h:mon.labels[i],k:m,fmt:F.n1})),{h:'Total',k:'tot',fmt:F.n1},{h:'Share',k:'pct',fmt:F.p1}],rows:mrows,total:mtot}),
+      table('What steals the time',{span:6,hint:'Top 3 failure modes per equipment, year to date (not affected by the month filter)',maxH:420,empty:'No failure mode detail for this equipment.',
+        cols:[{h:'Equipment',k:'eq',l:1},{h:'Failure mode',k:'fm',l:1},{h:'Hours',k:'h',fmt:F.n1}],rows:frows}),
+      text('Key insights',ins,{span:6}),
+    ];
+  }});
+
 page({sec:'sc',id:'efficiency',title:'Production efficiency',tab:'Production efficiency',tables:['Fact_Efficiency','Cost_Ops_Comparison'],
   slicers:[yearSlicer(['Fact_Efficiency'],{def:()=>{const y=latestYear('Fact_Efficiency');return y?[y]:[]}}),monthSlicer(['Fact_Efficiency']),
     fieldSlicer('fam','Product family','Fact_Efficiency','Product Family'),segSlicer('view','View',['Cases','Share of total'],'Cases')],
