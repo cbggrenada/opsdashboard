@@ -1,5 +1,5 @@
 
-Built 2026-11-23T20:36:35.811Z from 51 file(s). Latest data: 2026-11-19
+Built 2026-11-23T20:54:28.350Z from 51 file(s). Latest data: 2026-11-19
 - April '26 Daily Process Report 2026.xlsx
     raw file: Daily Process Report, 2026-04 to 2026-04
     used    Production_KPIs (sheet "Daily Process Report", raw)
@@ -284,3 +284,5 @@ Built 2026-11-23T20:36:35.811Z from 51 file(s). Latest data: 2026-11-19
     not needed: Entries September 2026, Sheet2, Steam Mass Flow , Fuel , Water , Elec.SEPTEMBER 2026, PROD.FIG. , CO2, Daily KPIs CO2, Daily KPIs, Water Analysis. '26, Sheet1
 
 Products not in scripts/product-map.json (shown under their own name, category "Other"): GINSENG UP
+
+Product families not in scripts/bottle-map.json (shown as "Not mapped" under Line efficiency by bottle): Banana J.Cool, Bellini, Carib, Carib (Export), Caribe Pearsecco, Caribe Rosé, Cider, Club Soda, Cream Soda, Dark Berry Royale, Ginger, Ginseng, Ginseng Up, Grape, Guinness, Hurricane Reef APA, Hurricane Reef Apa, Hurricane Reef IPA, Hurricane Reef Ipa, Hurricane Reef Pils, Hurricane Reef Pils Export &, J Cool, J.Cool, J.Cool Sorrel, Kola Champagne, Mackeson, Pearseco, Pornstar Martini, Shandy, Soda Water, Star Malt, Vita Malt, Vita Malt Ginger
